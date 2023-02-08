@@ -13,6 +13,7 @@
 		0880B24229938739007B4892 /* PDFPagePickerTestAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24129938739007B4892 /* PDFPagePickerTestAppTests.swift */; };
 		0880B24C29938739007B4892 /* PDFPagePickerTestAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24B29938739007B4892 /* PDFPagePickerTestAppUITests.swift */; };
 		0880B24E29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24D29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift */; };
+		0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0882658729938FAB00FAC732 /* PDFPagePicker */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +79,7 @@
 				0880B24029938739007B4892 /* PDFPagePickerTestAppTests */,
 				0880B24A29938739007B4892 /* PDFPagePickerTestAppUITests */,
 				0880B22F29938738007B4892 /* Products */,
+				0882658629938FAB00FAC732 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +121,13 @@
 			path = PDFPagePickerTestAppUITests;
 			sourceTree = "<group>";
 		};
+		0882658629938FAB00FAC732 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -134,6 +144,9 @@
 			dependencies = (
 			);
 			name = PDFPagePickerTestApp;
+			packageProductDependencies = (
+				0882658729938FAB00FAC732 /* PDFPagePicker */,
+			);
 			productName = PDFPagePickerTestApp;
 			productReference = 0880B22E29938738007B4892 /* PDFPagePickerTestApp.app */;
 			productType = "com.apple.product-type.application";
@@ -575,6 +588,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0882658729938FAB00FAC732 /* PDFPagePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PDFPagePicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0880B22629938738007B4892 /* Project object */;
 }
