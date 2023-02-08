@@ -1,2 +1,3 @@
-# BaseTemplate
-Basic Template Repo for further projects
+# PDFPagePicker
+
+A description of this package.
