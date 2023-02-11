@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0880B23229938738007B4892 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B23129938738007B4892 /* AppDelegate.swift */; };
+		0880B23229938738007B4892 /* PDFPagePickerTestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */; };
 		0880B23429938739007B4892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0880B23329938739007B4892 /* Assets.xcassets */; };
 		0880B23729938739007B4892 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0880B23529938739007B4892 /* MainMenu.xib */; };
 		0880B24229938739007B4892 /* PDFPagePickerTestAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24129938739007B4892 /* PDFPagePickerTestAppTests.swift */; };
@@ -35,7 +35,7 @@
 
 /* Begin PBXFileReference section */
 		0880B22E29938738007B4892 /* PDFPagePickerTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFPagePickerTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0880B23129938738007B4892 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppDelegate.swift; sourceTree = "<group>"; };
 		0880B23329938739007B4892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0880B23629938739007B4892 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0880B23829938739007B4892 /* PDFPagePickerTestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PDFPagePickerTestApp.entitlements; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 		0880B23029938738007B4892 /* PDFPagePickerTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				0880B23129938738007B4892 /* AppDelegate.swift */,
+				0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */,
 				0880B23329938739007B4892 /* Assets.xcassets */,
 				0880B23529938739007B4892 /* MainMenu.xib */,
 				0880B23829938739007B4892 /* PDFPagePickerTestApp.entitlements */,
@@ -261,7 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0880B23229938738007B4892 /* AppDelegate.swift in Sources */,
+				0880B23229938738007B4892 /* PDFPagePickerTestAppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
