@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PDFPageItem" customModule="PDFPagePicker">
+            <connections>
+                <outlet property="imageView" destination="qe1-5I-BCv" id="Bbb-1e-w4j"/>
+                <outlet property="view" destination="FUV-ib-pg7" id="Ng7-mM-f6D"/>
+                <outlet property="widthConstraint" destination="SZU-hQ-AFV" id="MCB-4S-CGr"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="FUV-ib-pg7">
+            <rect key="frame" x="0.0" y="0.0" width="216" height="216"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <visualEffectView hidden="YES" blendingMode="withinWindow" material="selection" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="PbY-cR-2BC">
+                    <rect key="frame" x="0.0" y="0.0" width="216" height="216"/>
+                </visualEffectView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qe1-5I-BCv">
+                    <rect key="frame" x="8" y="8" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="447" id="6em-er-bbo"/>
+                        <constraint firstAttribute="height" constant="200" id="O5R-zw-UHe"/>
+                        <constraint firstAttribute="width" priority="995" constant="200" id="SZU-hQ-AFV"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="XRh-Lu-PhQ"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="n9C-g6-uWJ"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="PbY-cR-2BC" secondAttribute="bottom" id="5Hc-PT-wEX"/>
+                <constraint firstAttribute="trailing" secondItem="PbY-cR-2BC" secondAttribute="trailing" id="9EU-MK-1dc"/>
+                <constraint firstItem="qe1-5I-BCv" firstAttribute="top" secondItem="FUV-ib-pg7" secondAttribute="top" constant="8" id="DEb-bo-tag"/>
+                <constraint firstAttribute="trailing" secondItem="qe1-5I-BCv" secondAttribute="trailing" constant="8" id="G05-fu-PQh"/>
+                <constraint firstItem="PbY-cR-2BC" firstAttribute="top" secondItem="FUV-ib-pg7" secondAttribute="top" id="Ond-CC-1mp"/>
+                <constraint firstAttribute="bottom" secondItem="qe1-5I-BCv" secondAttribute="bottom" constant="8" id="fap-Rk-iw9"/>
+                <constraint firstItem="PbY-cR-2BC" firstAttribute="leading" secondItem="FUV-ib-pg7" secondAttribute="leading" id="nMw-O9-rxG"/>
+                <constraint firstItem="qe1-5I-BCv" firstAttribute="leading" secondItem="FUV-ib-pg7" secondAttribute="leading" constant="8" id="pK6-q5-wlo"/>
+            </constraints>
+            <point key="canvasLocation" x="186.5" y="217"/>
+        </customView>
+    </objects>
+</document>

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PDFPagePicker" customModule="PDFPagePicker">
             <connections>
+                <outlet property="collectionView" destination="JAM-SW-Y8t" id="4pd-nu-e66"/>
                 <outlet property="view" destination="c22-O7-iKe" id="jWc-rb-L9l"/>
             </connections>
         </customObject>
@@ -15,22 +17,45 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
             <rect key="frame" x="0.0" y="0.0" width="480" height="215"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3H8-Bh-Mkk">
-                    <rect key="frame" x="136" y="100" width="209" height="16"/>
-                    <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" title="This View Interntionally Left Blank" id="wBe-k0-00e">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
+                <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1VN-n1-Ho6">
+                    <rect key="frame" x="0.0" y="9" width="480" height="206"/>
+                    <clipView key="contentView" id="5KM-XH-LKo">
+                        <rect key="frame" x="1" y="1" width="478" height="204"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView selectable="YES" allowsEmptySelection="NO" id="JAM-SW-Y8t">
+                                <rect key="frame" x="0.0" y="0.0" width="478" height="158"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" scrollDirection="horizontal" id="K51-KH-lKN">
+                                    <size key="itemSize" width="150" height="150"/>
+                                </collectionViewFlowLayout>
+                                <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="-2" id="Hgg-at-wEw"/>
+                                    <outlet property="delegate" destination="-2" id="aSh-Gt-BH7"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                    </clipView>
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="bg9-EP-K8f">
+                        <rect key="frame" x="1" y="144" width="233" height="15"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="dfM-Og-Unp">
+                        <rect key="frame" x="234" y="1" width="15" height="143"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
             </subviews>
             <constraints>
-                <constraint firstItem="3H8-Bh-Mkk" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="Gdp-Vx-kWf"/>
+                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="480" id="2Ek-c4-UHw"/>
+                <constraint firstAttribute="bottom" secondItem="1VN-n1-Ho6" secondAttribute="bottom" constant="9" id="G0J-cf-Wdz"/>
+                <constraint firstAttribute="trailing" secondItem="1VN-n1-Ho6" secondAttribute="trailing" id="I2J-HK-0zv"/>
+                <constraint firstItem="1VN-n1-Ho6" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="Rkx-Oh-mvG"/>
                 <constraint firstAttribute="height" constant="215" id="cZz-0d-BAH"/>
-                <constraint firstItem="3H8-Bh-Mkk" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="lRy-EA-eAB"/>
-                <constraint firstAttribute="width" constant="480" id="m3r-if-RID"/>
+                <constraint firstItem="1VN-n1-Ho6" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="o84-PS-SwT"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="154"/>
+            <point key="canvasLocation" x="139" y="153.5"/>
         </customView>
     </objects>
 </document>

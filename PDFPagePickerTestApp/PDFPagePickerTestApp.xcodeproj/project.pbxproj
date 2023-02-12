@@ -16,6 +16,7 @@
 		0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0882658729938FAB00FAC732 /* PDFPagePicker */; };
 		088F580D299856B800939E88 /* SingleImageImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088F580B299856B800939E88 /* SingleImageImportViewController.swift */; };
 		088F580E299856B800939E88 /* SingleImageImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 088F580C299856B800939E88 /* SingleImageImportViewController.xib */; };
+		088F58112998A5AD00939E88 /* AutoLayoutHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 088F58102998A5AD00939E88 /* AutoLayoutHelpers */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */,
+				088F58112998A5AD00939E88 /* AutoLayoutHelpers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +162,7 @@
 			name = PDFPagePickerTestApp;
 			packageProductDependencies = (
 				0882658729938FAB00FAC732 /* PDFPagePicker */,
+				088F58102998A5AD00939E88 /* AutoLayoutHelpers */,
 			);
 			productName = PDFPagePickerTestApp;
 			productReference = 0880B22E29938738007B4892 /* PDFPagePickerTestApp.app */;
@@ -233,6 +236,9 @@
 				Base,
 			);
 			mainGroup = 0880B22529938738007B4892;
+			packageReferences = (
+				088F580F2998A5AD00939E88 /* XCRemoteSwiftPackageReference "AutolayoutHelpers" */,
+			);
 			productRefGroup = 0880B22F29938738007B4892 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -605,10 +611,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		088F580F2998A5AD00939E88 /* XCRemoteSwiftPackageReference "AutolayoutHelpers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Gabardone/AutolayoutHelpers";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		0882658729938FAB00FAC732 /* PDFPagePicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PDFPagePicker;
+		};
+		088F58102998A5AD00939E88 /* AutoLayoutHelpers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 088F580F2998A5AD00939E88 /* XCRemoteSwiftPackageReference "AutolayoutHelpers" */;
+			productName = AutoLayoutHelpers;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
