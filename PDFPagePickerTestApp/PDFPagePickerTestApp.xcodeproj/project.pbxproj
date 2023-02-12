@@ -14,6 +14,8 @@
 		0880B24C29938739007B4892 /* PDFPagePickerTestAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24B29938739007B4892 /* PDFPagePickerTestAppUITests.swift */; };
 		0880B24E29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24D29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift */; };
 		0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0882658729938FAB00FAC732 /* PDFPagePicker */; };
+		088F580D299856B800939E88 /* SingleImageImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088F580B299856B800939E88 /* SingleImageImportViewController.swift */; };
+		088F580E299856B800939E88 /* SingleImageImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 088F580C299856B800939E88 /* SingleImageImportViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		0880B24729938739007B4892 /* PDFPagePickerTestAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDFPagePickerTestAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0880B24B29938739007B4892 /* PDFPagePickerTestAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppUITests.swift; sourceTree = "<group>"; };
 		0880B24D29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		088F580B299856B800939E88 /* SingleImageImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageImportViewController.swift; sourceTree = "<group>"; };
+		088F580C299856B800939E88 /* SingleImageImportViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleImageImportViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 		0880B23029938738007B4892 /* PDFPagePickerTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				088F580A2998569100939E88 /* UI */,
 				0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */,
 				0880B23329938739007B4892 /* Assets.xcassets */,
 				0880B23529938739007B4892 /* MainMenu.xib */,
@@ -126,6 +131,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		088F580A2998569100939E88 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				088F580B299856B800939E88 /* SingleImageImportViewController.swift */,
+				088F580C299856B800939E88 /* SingleImageImportViewController.xib */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +251,7 @@
 			files = (
 				0880B23429938739007B4892 /* Assets.xcassets in Resources */,
 				0880B23729938739007B4892 /* MainMenu.xib in Resources */,
+				088F580E299856B800939E88 /* SingleImageImportViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0880B23229938738007B4892 /* PDFPagePickerTestAppDelegate.swift in Sources */,
+				088F580D299856B800939E88 /* SingleImageImportViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
