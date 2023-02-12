@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "autolayouthelpers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Gabardone/AutolayoutHelpers",
+      "state" : {
+        "revision" : "eea48a905fb075a9398aa2b43f047cad77bf9ae6",
+        "version" : "1.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}
