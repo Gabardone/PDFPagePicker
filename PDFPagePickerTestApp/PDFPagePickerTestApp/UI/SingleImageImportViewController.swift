@@ -27,8 +27,6 @@ class SingleImageImportViewController: NSViewController {
     // MARK: - Properties
 
     private var subscriptions = [AnyCancellable]()
-
-    private lazy var pdfPagePicker = PDFPagePicker()
 }
 
 // MARK: - IBActions
@@ -92,8 +90,6 @@ extension SingleImageImportViewController {
         openPanel.allowedContentTypes = [.png, .jpeg, .pdf]
         openPanel.delegate = self
 
-        openPanel.accessoryView = pdfPagePicker.view
-
         return openPanel
     }
 
@@ -110,20 +106,11 @@ extension SingleImageImportViewController {
 
         switch imageUTType {
         case .pdf:
-            // TEST: Grab the last page (will need to build a picker later).
-            guard let pdfDocument = PDFDocument(url: imageFileURL),
-                  let lastPage = pdfDocument.page(at: pdfDocument.pageCount - 1) else {
-                Self.logger.error("Unable to fetch last page of document.")
-                return
-            }
-
-            guard let pageDocument = lastPage.dataRepresentation else {
-                Self.logger.error("Unable to create document out of page.")
-                return
-            }
-
-            if let image = NSImage(data: pageDocument) {
-                imageWell.image = image
+            // We may need to run the pdf page picker to extract the image for the page we actually want.
+            pickPDFPage(from: imageFileURL) { pdfPagePicker in
+                presentAsSheet(pdfPagePicker)
+            } completion: { [weak self] image in
+                self?.imageWell.image = image
             }
 
         case .jpeg, .png:
@@ -139,30 +126,4 @@ extension SingleImageImportViewController {
 
 // MARK: - NSOpenSavePanelDelegate Adoption
 
-extension SingleImageImportViewController: NSOpenSavePanelDelegate {
-    func panelSelectionDidChange(_ sender: Any?) {
-        guard let openPanel = sender as? NSOpenPanel else {
-            return
-        }
-
-        guard let imageFileURL = openPanel.url else {
-            openPanel.isAccessoryViewDisclosed = false
-            pdfPagePicker.pdfDocument = nil
-            return
-        }
-
-        guard let typeID = try? imageFileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier else {
-            Self.logger.error("Cannot determinte type of user selected image at URL \(imageFileURL)")
-            return
-        }
-
-        guard let imageUTType = UTType(typeID) else {
-            Self.logger.error("User selected file of unsupported image type with identifier \(typeID) at \(imageFileURL)")
-            return
-        }
-
-        let isPDF = imageUTType == .pdf
-        openPanel.isAccessoryViewDisclosed = isPDF
-        pdfPagePicker.pdfDocument = isPDF ? PDFDocument(url: imageFileURL) : nil
-    }
-}
+extension SingleImageImportViewController: NSOpenSavePanelDelegate {}

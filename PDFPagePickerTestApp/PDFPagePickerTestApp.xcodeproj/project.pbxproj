@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		082B920F29A40B2C00D13B1B /* SingleImageImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 082B921129A40B2C00D13B1B /* SingleImageImportViewController.xib */; };
 		0880B23229938738007B4892 /* PDFPagePickerTestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */; };
 		0880B23429938739007B4892 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0880B23329938739007B4892 /* Assets.xcassets */; };
 		0880B23729938739007B4892 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0880B23529938739007B4892 /* MainMenu.xib */; };
@@ -15,7 +16,6 @@
 		0880B24E29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0880B24D29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift */; };
 		0882658829938FAB00FAC732 /* PDFPagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0882658729938FAB00FAC732 /* PDFPagePicker */; };
 		088F580D299856B800939E88 /* SingleImageImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088F580B299856B800939E88 /* SingleImageImportViewController.swift */; };
-		088F580E299856B800939E88 /* SingleImageImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 088F580C299856B800939E88 /* SingleImageImportViewController.xib */; };
 		088F58112998A5AD00939E88 /* AutoLayoutHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 088F58102998A5AD00939E88 /* AutoLayoutHelpers */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		082B921029A40B2C00D13B1B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SingleImageImportViewController.xib; sourceTree = "<group>"; };
 		0880B22E29938738007B4892 /* PDFPagePickerTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFPagePickerTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0880B23129938738007B4892 /* PDFPagePickerTestAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppDelegate.swift; sourceTree = "<group>"; };
 		0880B23329938739007B4892 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -48,7 +49,6 @@
 		0880B24B29938739007B4892 /* PDFPagePickerTestAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppUITests.swift; sourceTree = "<group>"; };
 		0880B24D29938739007B4892 /* PDFPagePickerTestAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPagePickerTestAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		088F580B299856B800939E88 /* SingleImageImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageImportViewController.swift; sourceTree = "<group>"; };
-		088F580C299856B800939E88 /* SingleImageImportViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleImageImportViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				088F580B299856B800939E88 /* SingleImageImportViewController.swift */,
-				088F580C299856B800939E88 /* SingleImageImportViewController.xib */,
+				082B921129A40B2C00D13B1B /* SingleImageImportViewController.xib */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -257,7 +257,7 @@
 			files = (
 				0880B23429938739007B4892 /* Assets.xcassets in Resources */,
 				0880B23729938739007B4892 /* MainMenu.xib in Resources */,
-				088F580E299856B800939E88 /* SingleImageImportViewController.xib in Resources */,
+				082B920F29A40B2C00D13B1B /* SingleImageImportViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +320,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		082B921129A40B2C00D13B1B /* SingleImageImportViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				082B921029A40B2C00D13B1B /* Base */,
+			);
+			name = SingleImageImportViewController.xib;
+			sourceTree = "<group>";
+		};
 		0880B23529938739007B4892 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

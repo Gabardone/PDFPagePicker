@@ -1,15 +1,68 @@
 import Cocoa
 import PDFKit
+import os
+
+extension NSViewController {
+    /**
+     Determines whether the page picker needs to be presented and does so if that's the case.
+
+     The method does all necessary validation before presenting the pdf page picker. For example if the pdf only has
+     one page it will return that as the image.
+
+     Presentation and behavior on finalization are configurable through behavior parameters.
+     - Parameter pdfFileURL: An URL for the pdf we want to extract a page from. If the URL isn't pointing to a valid
+     pdf that the app can access the method will just log and return.
+     - Parameter present: A block that gets passed the pdf page picker view controller so it can be presented in
+     whatever way makes the more sense fo the context.
+     - Parameter completion: A block called once we have an image for the selected pdf page.
+     */
+    public func pickPDFPage(
+        from pdfFileURL: URL,
+        present: (NSViewController) -> Void,
+        completion: @escaping (NSImage) -> Void
+    ) {
+        // Check first if we can get a pdf document
+        guard let pdfDocument = PDFDocument(url: pdfFileURL) else {
+            PDFPagePicker.logger.error("File is not a pdf, or has no pages to import.")
+            return
+        }
+
+        guard pdfDocument.pageCount > 0 else {
+            PDFPagePicker.logger.error("Empty pdf file, no image to import.")
+            return
+        }
+
+        guard pdfDocument.pageCount > 1 else {
+            // Single page, just grab it.
+            if let image = NSImage(contentsOf: pdfFileURL) {
+                completion(image)
+            }
+            return
+        }
+
+        // If we got here we need to present the actual page picker.
+        let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, completion: completion)
+        present(pdfPagePicker)
+    }
+}
 
 public class PDFPagePicker: NSViewController {
-    public init() {
-        super.init(nibName: "PDFPagePicker", bundle: Bundle.module)
+    fileprivate static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
+
+    public init(pdfDocument: PDFDocument, completion: @escaping (NSImage) -> Void) {
+        self.completion = completion
+        super.init(nibName: "PDFPagePicker", bundle: .module)
+        self.representedObject = pdfDocument
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Properties
+
+    private let completion: (NSImage) -> Void
 
     // MARK: - IBOutlets
 
@@ -20,36 +73,28 @@ public class PDFPagePicker: NSViewController {
 // MARK: - View Model
 
 extension PDFPagePicker {
-    public var pdfDocument: PDFDocument? {
-        get {
-            super.representedObject as? PDFDocument
-        }
-
-        set {
-            super.representedObject = newValue
-
-            collectionView.reloadData()
-        }
+    public var pdfDocument: PDFDocument {
+        super.representedObject as! PDFDocument
     }
 }
 
 // MARK: - NSViewController Overrides
 
 extension PDFPagePicker {
+    private static let itemHeight = 180.0
+
+    private static let estimatedItemSize = CGSize(width: itemHeight / sqrt(2.0), height: itemHeight)
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         collectionView.register(PDFPageItem.self, forItemWithIdentifier: PDFPageItem.identifier)
     }
 
-    override public var representedObject: Any? {
-        get {
-            return super.representedObject
-        }
+    override public func viewWillAppear() {
+        super.viewWillAppear()
 
-        set {
-            preconditionFailure("representedObject shouldn't be set directly on `PDFPagePicker`")
-        }
+        collectionView.reloadData()
     }
 }
 
@@ -57,7 +102,7 @@ extension PDFPagePicker {
 
 extension PDFPagePicker: NSCollectionViewDataSource {
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pdfDocument?.pageCount ?? 0
+        return pdfDocument.pageCount
     }
 
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
@@ -65,14 +110,34 @@ extension PDFPagePicker: NSCollectionViewDataSource {
             return NSCollectionViewItem()
         }
 
-        item.pdfPage = pdfDocument?.page(at: indexPath.item)
+        item.selectionMargin = Self.selectionMargin
+        item.desiredSize = PDFPageItem.desiredSize(
+            forPage: pdfDocument.page(at: indexPath.item)!,
+            contained: Self.sampleSize,
+            margin: Self.selectionMargin
+        )
+        item.pdfPage = pdfDocument.page(at: indexPath.item)
 
         return item
     }
 }
 
-// MARK: - NSCollectionViewDelegate Adoption
+// MARK: - NSCollectionViewDelegateFlowLayout
 
-extension PDFPagePicker: NSCollectionViewDelegate {
+extension PDFPagePicker: NSCollectionViewDelegateFlowLayout {
+    static private let sampleSize = CGSize(width: 1000.0, height: itemHeight)
 
+    static private let selectionMargin = 4.0
+
+    public func collectionView(
+        _ collectionView: NSCollectionView,
+        layout collectionViewLayout: NSCollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> NSSize {
+        guard let pdfPage = pdfDocument.page(at: indexPath.item) else {
+            return .zero
+        }
+
+        return PDFPageItem.desiredSize(forPage: pdfPage, contained: Self.sampleSize, margin: Self.selectionMargin)
+    }
 }

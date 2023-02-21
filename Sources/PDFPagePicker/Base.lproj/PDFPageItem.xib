@@ -8,40 +8,35 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PDFPageItem" customModule="PDFPagePicker">
             <connections>
+                <outlet property="horizontalMargin" destination="LvN-xr-eXd" id="5ry-zi-nAb"/>
                 <outlet property="imageView" destination="qe1-5I-BCv" id="Bbb-1e-w4j"/>
+                <outlet property="selectionEffect" destination="PbY-cR-2BC" id="3Sl-KU-ZMt"/>
+                <outlet property="verticalMargin" destination="BLf-3M-2Fv" id="dI0-ps-ySQ"/>
                 <outlet property="view" destination="FUV-ib-pg7" id="Ng7-mM-f6D"/>
-                <outlet property="widthConstraint" destination="SZU-hQ-AFV" id="MCB-4S-CGr"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="FUV-ib-pg7">
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="FUV-ib-pg7">
             <rect key="frame" x="0.0" y="0.0" width="216" height="216"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <visualEffectView hidden="YES" blendingMode="withinWindow" material="selection" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="PbY-cR-2BC">
                     <rect key="frame" x="0.0" y="0.0" width="216" height="216"/>
                 </visualEffectView>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qe1-5I-BCv">
-                    <rect key="frame" x="8" y="8" width="200" height="200"/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="447" id="6em-er-bbo"/>
-                        <constraint firstAttribute="height" constant="200" id="O5R-zw-UHe"/>
-                        <constraint firstAttribute="width" priority="995" constant="200" id="SZU-hQ-AFV"/>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="XRh-Lu-PhQ"/>
-                    </constraints>
+                    <rect key="frame" x="2" y="2" width="212" height="212"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="n9C-g6-uWJ"/>
                 </imageView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="PbY-cR-2BC" secondAttribute="bottom" id="5Hc-PT-wEX"/>
                 <constraint firstAttribute="trailing" secondItem="PbY-cR-2BC" secondAttribute="trailing" id="9EU-MK-1dc"/>
-                <constraint firstItem="qe1-5I-BCv" firstAttribute="top" secondItem="FUV-ib-pg7" secondAttribute="top" constant="8" id="DEb-bo-tag"/>
-                <constraint firstAttribute="trailing" secondItem="qe1-5I-BCv" secondAttribute="trailing" constant="8" id="G05-fu-PQh"/>
+                <constraint firstAttribute="height" secondItem="qe1-5I-BCv" secondAttribute="height" constant="4" id="BLf-3M-2Fv"/>
+                <constraint firstItem="qe1-5I-BCv" firstAttribute="centerX" secondItem="FUV-ib-pg7" secondAttribute="centerX" id="C1w-EF-FJ8"/>
+                <constraint firstAttribute="width" secondItem="qe1-5I-BCv" secondAttribute="width" constant="4" id="LvN-xr-eXd"/>
                 <constraint firstItem="PbY-cR-2BC" firstAttribute="top" secondItem="FUV-ib-pg7" secondAttribute="top" id="Ond-CC-1mp"/>
-                <constraint firstAttribute="bottom" secondItem="qe1-5I-BCv" secondAttribute="bottom" constant="8" id="fap-Rk-iw9"/>
                 <constraint firstItem="PbY-cR-2BC" firstAttribute="leading" secondItem="FUV-ib-pg7" secondAttribute="leading" id="nMw-O9-rxG"/>
-                <constraint firstItem="qe1-5I-BCv" firstAttribute="leading" secondItem="FUV-ib-pg7" secondAttribute="leading" constant="8" id="pK6-q5-wlo"/>
+                <constraint firstItem="qe1-5I-BCv" firstAttribute="centerY" secondItem="FUV-ib-pg7" secondAttribute="centerY" id="plJ-CR-N7J"/>
             </constraints>
             <point key="canvasLocation" x="186.5" y="217"/>
         </customView>
