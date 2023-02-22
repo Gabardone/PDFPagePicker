@@ -12,12 +12,15 @@ extension NSViewController {
      Presentation and behavior on finalization are configurable through behavior parameters.
      - Parameter pdfFileURL: An URL for the pdf we want to extract a page from. If the URL isn't pointing to a valid
      pdf that the app can access the method will just log and return.
+     - Parameter verb: The action that will be performed with the selected page. Examples include "Import" or "Copy".
+     It will show both in the header label and the selection button.
      - Parameter present: A block that gets passed the pdf page picker view controller so it can be presented in
      whatever way makes the more sense fo the context.
      - Parameter completion: A block called once we have an image for the selected pdf page.
      */
     public func pickPDFPage(
         from pdfFileURL: URL,
+        verb: String,
         present: (NSViewController) -> Void,
         completion: @escaping (NSImage) -> Void
     ) {
@@ -41,7 +44,7 @@ extension NSViewController {
         }
 
         // If we got here we need to present the actual page picker.
-        let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, completion: completion)
+        let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, verb: verb, completion: completion)
         present(pdfPagePicker)
     }
 }
@@ -49,7 +52,8 @@ extension NSViewController {
 public class PDFPagePicker: NSViewController {
     fileprivate static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
 
-    public init(pdfDocument: PDFDocument, completion: @escaping (NSImage) -> Void) {
+    public init(pdfDocument: PDFDocument, verb: String, completion: @escaping (NSImage) -> Void) {
+        self.verb = verb
         self.completion = completion
         super.init(nibName: "PDFPagePicker", bundle: .module)
         self.representedObject = pdfDocument
@@ -64,10 +68,32 @@ public class PDFPagePicker: NSViewController {
 
     private let completion: (NSImage) -> Void
 
+    private let verb: String
+
     // MARK: - IBOutlets
 
     @IBOutlet
+    private var headerLabel: NSTextField!
+
+    @IBOutlet
     private var collectionView: NSCollectionView!
+
+    @IBOutlet
+    private var pickPageButton: NSButton!
+}
+
+// MARK: - IBActions
+
+extension PDFPagePicker {
+    @IBAction
+    private func pickPage(_ sender: NSButton?) {
+        print("We got it!")
+    }
+
+    @IBAction
+    private func cancel(_ sender: NSButton?) {
+        presentingViewController?.dismiss(self)
+    }
 }
 
 // MARK: - View Model
@@ -88,13 +114,28 @@ extension PDFPagePicker {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        // Finish configuring the collection view.
         collectionView.register(PDFPageItem.self, forItemWithIdentifier: PDFPageItem.identifier)
+
+        // Configure labels.
+        let labelFormat = NSLocalizedString("LABEL_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "Select the Page to %@", comment: "Format string for the header label in the page picker")
+        headerLabel.stringValue = .localizedStringWithFormat(labelFormat, verb)
+
+        let buttonFormat = NSLocalizedString("BUTTON_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "%@ Selected", comment: "Format string for the default button in the page picker")
+        pickPageButton.title = .localizedStringWithFormat(buttonFormat, verb)
     }
 
     override public func viewWillAppear() {
         super.viewWillAppear()
 
         collectionView.reloadData()
+    }
+
+    override public func viewDidAppear() {
+        super.viewDidAppear()
+
+        // Make sure there's a selection.
+        collectionView.selectItems(at: [.init(item: 0, section: 0)], scrollPosition: .centeredHorizontally)
     }
 }
 

@@ -9,25 +9,47 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PDFPagePicker" customModule="PDFPagePicker">
             <connections>
                 <outlet property="collectionView" destination="JAM-SW-Y8t" id="4pd-nu-e66"/>
-                <outlet property="view" destination="c22-O7-iKe" id="jWc-rb-L9l"/>
+                <outlet property="headerLabel" destination="xff-Ol-Ztg" id="Udd-TL-bfM"/>
+                <outlet property="pickPageButton" destination="02g-ec-ApH" id="UUR-1q-LWf"/>
+                <outlet property="view" destination="ye7-rq-xb1" id="qTq-la-kcO"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="480" height="215"/>
+        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ye7-rq-xb1">
+            <rect key="frame" x="0.0" y="0.0" width="520" height="331"/>
             <subviews>
-                <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1VN-n1-Ho6">
-                    <rect key="frame" x="0.0" y="9" width="480" height="206"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="Uf7-rs-0CY">
+                    <rect key="frame" x="0.0" y="275" width="341" height="56"/>
+                    <subviews>
+                        <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xff-Ol-Ztg">
+                            <rect key="frame" x="18" y="20" width="305" height="16"/>
+                            <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" id="Oth-8b-Phb">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="xff-Ol-Ztg" firstAttribute="top" secondItem="Uf7-rs-0CY" secondAttribute="top" constant="20" symbolic="YES" id="8g5-3l-9ro"/>
+                        <constraint firstItem="xff-Ol-Ztg" firstAttribute="leading" secondItem="Uf7-rs-0CY" secondAttribute="leading" constant="20" symbolic="YES" id="ht2-DF-G9M"/>
+                        <constraint firstAttribute="trailing" secondItem="xff-Ol-Ztg" secondAttribute="trailing" constant="20" symbolic="YES" id="qKv-Os-1VH"/>
+                        <constraint firstAttribute="bottom" secondItem="xff-Ol-Ztg" secondAttribute="bottom" constant="20" symbolic="YES" id="znJ-OP-beS"/>
+                    </constraints>
+                </customView>
+                <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="allowed" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="1VN-n1-Ho6">
+                    <rect key="frame" x="0.0" y="60" width="520" height="215"/>
                     <clipView key="contentView" id="5KM-XH-LKo">
-                        <rect key="frame" x="1" y="1" width="478" height="204"/>
+                        <rect key="frame" x="1" y="1" width="518" height="213"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView selectable="YES" allowsEmptySelection="NO" id="JAM-SW-Y8t">
-                                <rect key="frame" x="0.0" y="0.0" width="478" height="158"/>
+                                <rect key="frame" x="0.0" y="0.0" width="518" height="213"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" scrollDirection="horizontal" id="r20-Tb-jI7">
                                     <size key="itemSize" width="50" height="50"/>
+                                    <edgeInsets key="sectionInset" left="16" right="16" top="0.0" bottom="0.0"/>
                                 </collectionViewFlowLayout>
                                 <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <connections>
@@ -37,25 +59,90 @@
                             </collectionView>
                         </subviews>
                     </clipView>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="215" id="MIY-cB-eeX"/>
+                    </constraints>
                     <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="bg9-EP-K8f">
                         <rect key="frame" x="1" y="144" width="233" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="dfM-Og-Unp">
-                        <rect key="frame" x="234" y="1" width="15" height="143"/>
+                        <rect key="frame" x="-100" y="-100" width="15" height="143"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="ufX-y2-fbX">
+                    <rect key="frame" x="0.0" y="0.0" width="520" height="60"/>
+                    <subviews>
+                        <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="750" verticalStackHuggingPriority="750" horizontalHuggingPriority="750" verticalHuggingPriority="750" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aqm-zm-iuf">
+                            <rect key="frame" x="156" y="20" width="344" height="20"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hq1-hw-EvQ">
+                                    <rect key="frame" x="-7" y="-7" width="182" height="32"/>
+                                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hb8-os-VBa">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="cancel:" target="-2" id="oNr-dP-PVR"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="02g-ec-ApH">
+                                    <rect key="frame" x="169" y="-7" width="182" height="32"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="fQy-3U-p33"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="push" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pap-iD-ETc">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="pickPage:" target="-2" id="VXF-xe-DbC"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="02g-ec-ApH" firstAttribute="width" secondItem="Hq1-hw-EvQ" secondAttribute="width" id="v3H-YH-cut"/>
+                            </constraints>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Aqm-zm-iuf" secondAttribute="trailing" constant="20" id="AbF-fW-0za"/>
+                        <constraint firstAttribute="bottom" secondItem="Aqm-zm-iuf" secondAttribute="bottom" constant="20" symbolic="YES" id="Zo4-dU-D1L"/>
+                        <constraint firstItem="Aqm-zm-iuf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ufX-y2-fbX" secondAttribute="leading" constant="20" symbolic="YES" id="tAY-ct-MwL"/>
+                        <constraint firstItem="Aqm-zm-iuf" firstAttribute="top" secondItem="ufX-y2-fbX" secondAttribute="top" constant="20" symbolic="YES" id="vtt-Ls-aFv"/>
+                    </constraints>
+                </customView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="480" id="2Ek-c4-UHw"/>
-                <constraint firstAttribute="bottom" secondItem="1VN-n1-Ho6" secondAttribute="bottom" constant="9" id="G0J-cf-Wdz"/>
-                <constraint firstAttribute="trailing" secondItem="1VN-n1-Ho6" secondAttribute="trailing" id="I2J-HK-0zv"/>
-                <constraint firstItem="1VN-n1-Ho6" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="Rkx-Oh-mvG"/>
-                <constraint firstAttribute="height" constant="215" id="cZz-0d-BAH"/>
-                <constraint firstItem="1VN-n1-Ho6" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="o84-PS-SwT"/>
+                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="480" id="9cd-a6-3KK"/>
+                <constraint firstItem="1VN-n1-Ho6" firstAttribute="leading" secondItem="ye7-rq-xb1" secondAttribute="leading" id="FO6-v3-Zvl"/>
+                <constraint firstAttribute="trailing" secondItem="1VN-n1-Ho6" secondAttribute="trailing" id="Mwx-5b-pHm"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Uf7-rs-0CY" secondAttribute="trailing" id="YLM-7h-gKj"/>
+                <constraint firstItem="Uf7-rs-0CY" firstAttribute="leading" secondItem="ye7-rq-xb1" secondAttribute="leading" id="Zu1-GF-VLU"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="153.5"/>
-        </customView>
+            <visibilityPriorities>
+                <integer value="1000"/>
+                <integer value="1000"/>
+                <integer value="1000"/>
+            </visibilityPriorities>
+            <customSpacing>
+                <real value="3.4028234663852886e+38"/>
+                <real value="3.4028234663852886e+38"/>
+                <real value="3.4028234663852886e+38"/>
+            </customSpacing>
+            <point key="canvasLocation" x="-28" y="-119.5"/>
+        </stackView>
     </objects>
 </document>
