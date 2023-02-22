@@ -161,4 +161,10 @@ extension PDFPageItem {
             }
         }
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        selectionEffect.isEmphasized = true
+    }
 }
