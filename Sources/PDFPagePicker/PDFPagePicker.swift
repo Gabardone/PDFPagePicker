@@ -87,12 +87,41 @@ public class PDFPagePicker: NSViewController {
 extension PDFPagePicker {
     @IBAction
     private func pickPage(_ sender: NSButton?) {
-        print("We got it!")
+        pickPage()
+    }
+
+    private func pickPage() {
+        dismissSelf()
+
+        guard let selectedIndex = collectionView.selectionIndexPaths.first?.item else {
+            Self.logger.error("Attempted to pick a page but no page is selected.")
+            return
+        }
+
+        guard let selectedPageData = pdfDocument.page(at: selectedIndex)?.dataRepresentation else {
+            Self.logger.error("Unable to extract page pdf data for page at index \(selectedIndex).")
+            return
+        }
+
+        guard let pageImage = NSImage(data: selectedPageData) else {
+            Self.logger.error("Unable to create image from pdf page at index \(selectedIndex).")
+            return
+        }
+
+        completion(pageImage)
     }
 
     @IBAction
     private func cancel(_ sender: NSButton?) {
-        presentingViewController?.dismiss(self)
+        dismissSelf()
+    }
+
+    private func dismissSelf() {
+        if let presentingViewController {
+            presentingViewController.dismiss(self)
+        } else {
+            dismiss(self)
+        }
     }
 }
 
@@ -118,7 +147,7 @@ extension PDFPagePicker {
         collectionView.register(PDFPageItem.self, forItemWithIdentifier: PDFPageItem.identifier)
 
         // Configure labels.
-        let labelFormat = NSLocalizedString("LABEL_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "Select the Page to %@", comment: "Format string for the header label in the page picker")
+        let labelFormat = NSLocalizedString("LABEL_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "Select the Page to %@:", comment: "Format string for the header label in the page picker")
         headerLabel.stringValue = .localizedStringWithFormat(labelFormat, verb)
 
         let buttonFormat = NSLocalizedString("BUTTON_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "%@ Selected", comment: "Format string for the default button in the page picker")
