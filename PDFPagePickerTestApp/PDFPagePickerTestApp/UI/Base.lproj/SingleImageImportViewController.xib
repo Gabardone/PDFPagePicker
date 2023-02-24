@@ -34,7 +34,7 @@
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xQH-Ld-QKZ">
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xQH-Ld-QKZ" customClass="ImageWell" customModule="PDFPagePicker">
                                     <rect key="frame" x="-3" y="-3" width="246" height="246"/>
                                     <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="fo5-so-qHy"/>
                                 </imageView>
