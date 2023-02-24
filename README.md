@@ -12,6 +12,8 @@ if needed.
 
 ## Usage
 
+The repository contains a sample test app `PDFPagePickerTestApp` which illustrates basic use of the package API.
+
 For any of the options, If the default presentation behavior doesn't work for your needs, you can always override
 `NSResponder.presentPDFPagePicker` wherever it makes the most sense.
 
