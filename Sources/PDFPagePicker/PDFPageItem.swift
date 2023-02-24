@@ -165,5 +165,41 @@ extension PDFPageItem {
         super.viewDidLoad()
 
         selectionEffect.isEmphasized = true
+
+        let doubleClickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(selectPage(_:)))
+        doubleClickRecognizer.numberOfClicksRequired = 2
+        doubleClickRecognizer.delaysPrimaryMouseButtonEvents = false // So selection also happens immediately.
+        doubleClickRecognizer.delegate = self
+        imageView?.addGestureRecognizer(doubleClickRecognizer)
+    }
+}
+
+// MARK: - User Interaction
+
+extension PDFPageItem {
+    @objc
+    private func selectPage(_ sender: Any?) {
+        guard let pdfPage else {
+            return
+        }
+
+        // This is pretty coupled with `PDFPagePicker` so we'll just dig in for it.
+        for next in sequence(first: self, next: \.nextResponder) {
+            if let pdfPagePicker = next as? PDFPagePicker {
+                pdfPagePicker.pickDoubleClickedPage(pdfPage)
+                return
+            }
+        }
+    }
+}
+
+// MARK: - NSGestureRecognizerDelegate
+
+extension PDFPageItem: NSGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: NSGestureRecognizer,
+        shouldBeRequiredToFailBy otherGestureRecognizer: NSGestureRecognizer
+    ) -> Bool {
+        return false
     }
 }

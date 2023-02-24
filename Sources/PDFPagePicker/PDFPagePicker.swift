@@ -42,6 +42,29 @@ public class PDFPagePicker: NSViewController {
     private var pickPageButton: NSButton!
 }
 
+// MARK: - Actions
+
+extension PDFPagePicker {
+    func pickDoubleClickedPage(_ pdfPage: PDFPage) {
+        dismissSelf()
+        pickPDFPage(pdfPage)
+    }
+
+    private func pickPDFPage(_ pdfPage: PDFPage) {
+        guard let selectedPageData = pdfPage.dataRepresentation else {
+            Self.logger.error("Unable to extract page pdf data for pdf page \(pdfPage).")
+            return
+        }
+
+        guard let pageImage = NSImage(data: selectedPageData) else {
+            Self.logger.error("Unable to create image from pdf page \(pdfPage).")
+            return
+        }
+
+        completion(pageImage)
+    }
+}
+
 // MARK: - IBActions
 
 extension PDFPagePicker {
@@ -58,17 +81,12 @@ extension PDFPagePicker {
             return
         }
 
-        guard let selectedPageData = pdfDocument.page(at: selectedIndex)?.dataRepresentation else {
-            Self.logger.error("Unable to extract page pdf data for page at index \(selectedIndex).")
+        guard let selectedPage = pdfDocument.page(at: selectedIndex) else {
+            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(self.pdfDocument).")
             return
         }
 
-        guard let pageImage = NSImage(data: selectedPageData) else {
-            Self.logger.error("Unable to create image from pdf page at index \(selectedIndex).")
-            return
-        }
-
-        completion(pageImage)
+        pickPDFPage(selectedPage)
     }
 
     @IBAction
@@ -149,6 +167,12 @@ extension PDFPagePicker: NSCollectionViewDataSource {
         item.pdfPage = pdfDocument.page(at: indexPath.item)
 
         return item
+    }
+}
+
+extension PDFPagePicker: NSCollectionViewDelegate {
+    public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        return indexPaths
     }
 }
 
