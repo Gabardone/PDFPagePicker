@@ -5,7 +5,6 @@
 //  Created by Óscar Morales Vivó on 2/11/23.
 //
 
-import AutoLayoutHelpers
 import Cocoa
 import PDFKit
 
