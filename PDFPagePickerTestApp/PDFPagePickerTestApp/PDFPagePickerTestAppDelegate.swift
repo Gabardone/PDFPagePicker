@@ -1,5 +1,5 @@
 //
-//  AppDelegate.swift
+//  PDFPagePickerTestAppDelegate.swift
 //  PDFPagePickerTestApp
 //
 //  Created by Óscar Morales Vivó on 2/7/23.

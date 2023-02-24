@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
  The class will request presentation of a pdf page picker down the responder chain when given multipage pdf content.
  Otherwise it works exactly as any regular instance of its superclass.
  */
-class ImageWell: NSImageView {
+open class ImageWell: NSImageView {
     private static let pasteVerb = NSLocalizedString("PASTE_VERB", value: "Paste", comment: "Paste verb for pdf pagepicker display when pasting pdf content")
 
     @objc
@@ -37,7 +37,7 @@ class ImageWell: NSImageView {
 
     private static let dropVerb = NSLocalizedString("DROP_VERB", value: "Drop", comment: "Drop verb for pdf pagepicker display when dropping pdf content")
 
-    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    override open func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         if overrideImportImageFrom(pasteboard: sender.draggingPasteboard, verb: Self.dropVerb) {
             // The override importer is overriding.
             return true
@@ -46,7 +46,7 @@ class ImageWell: NSImageView {
         return super.performDragOperation(sender)
     }
 
-    override func concludeDragOperation(_ sender: NSDraggingInfo?) {
+    override open func concludeDragOperation(_ sender: NSDraggingInfo?) {
         // This method intentionally left blank. For some reason `NSImageView` sets the image _again_ here, which
         // causes a glitch if we're running the pdf page picker.
     }
@@ -85,15 +85,5 @@ class ImageWell: NSImageView {
         }
 
         return false
-    }
-
-    override var image: NSImage? {
-        didSet {
-            guard image != oldValue else {
-                return
-            }
-
-            print("Did set the image!")
-        }
     }
 }
