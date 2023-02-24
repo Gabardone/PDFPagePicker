@@ -10,18 +10,24 @@ interception point for configuring presentation of that page picker.
 - `ImageWell`, a subclass of `NSImageView` that intercepts paste and drop operations and presents the pdf page picker
 if needed.
 
+## Installation
+
+Select "Add package…" in the Xcode File menu and paste the URL for this same repository in the search bar. Then `import PDFPagePicker` in whichever files need it. 
+
 ## Usage
 
 The repository contains a sample test app `PDFPagePickerTestApp` which illustrates basic use of the package API.
 
-For any of the options, If the default presentation behavior doesn't work for your needs, you can always override
-`NSResponder.presentPDFPagePicker` wherever it makes the most sense.
+For any of the options, if the default presentation behavior doesn't work for your needs you can always override
+`NSResponder.presentPDFPagePicker` any place down the responder chain where it will catch the call.
 
 ### Direct API
 
-Say for exmaple that your app has already obtained a pdf file during an import operation, and you want to save the image
-for the selected page (if any). The call to be made, from any component of the responder chain (i.e. the view controller
-coordinating the process) would look as follows, give or take some localization:
+For example, aassume that your app has already obtained a pdf file during an import operation, and you want to save the image
+for the selected page, if the user selects any.
+
+You would make a call similar to the following from any component of the responder chain (i.e. the view controller
+coordinating the process), give or take some localization:
 
 ```swift
 pickPDFPage(from: pdfFileURL, verb: "Import") { image in
@@ -31,5 +37,4 @@ pickPDFPage(from: pdfFileURL, verb: "Import") { image in
 
 ### `ImageWell`
 
-Use it as a direct replacement of `NSImageWell`. It will also behave a bit better than the framework superclass when
-dealing with image files.
+Use it as a direct replacement for an editable [`NSImageWell`](https://developer.apple.com/documentation/appkit/nsimageview). It will also ensure that pasting or dropping image files on the well will extract the image data off the file instead of the file's icon.
