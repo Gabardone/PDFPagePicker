@@ -12,7 +12,8 @@ if needed.
 
 ## Installation
 
-Select "Add package…" in the Xcode File menu and paste the URL for this same repository in the search bar. Then `import PDFPagePicker` in whichever files need it. 
+Select "Add package…" in the Xcode File menu and paste the URL for this same repository in the search bar. Then `import
+PDFPagePicker` in whichever files need it. 
 
 ## Usage
 
@@ -23,11 +24,9 @@ For any of the options, if the default presentation behavior doesn't work for yo
 
 ### Direct API
 
-For example, aassume that your app has already obtained a pdf file during an import operation, and you want to save the image
-for the selected page, if the user selects any.
-
-You would make a call similar to the following from any component of the responder chain (i.e. the view controller
-coordinating the process), give or take some localization:
+For example, assume that your app has already obtained a pdf file during an import operation, and you want to save the
+image for the selected page, if the user selects any. You would make a call similar to the following from any component
+of the responder chain (i.e. the view controller coordinating the process), give or take some localization:
 
 ```swift
 pickPDFPage(from: pdfFileURL, verb: "Import") { image in
@@ -37,4 +36,6 @@ pickPDFPage(from: pdfFileURL, verb: "Import") { image in
 
 ### `ImageWell`
 
-Use it as a direct replacement for an editable [`NSImageWell`](https://developer.apple.com/documentation/appkit/nsimageview). It will also ensure that pasting or dropping image files on the well will extract the image data off the file instead of the file's icon.
+Use it as a direct replacement for an editable
+[`NSImageWell`](https://developer.apple.com/documentation/appkit/nsimageview). It will also ensure that pasting or
+dropping image files on the well will extract the image data off the file instead of the file's icon.
