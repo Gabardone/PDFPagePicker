@@ -69,7 +69,7 @@ extension PDFPagePicker {
 
 extension PDFPagePicker {
     @IBAction
-    private func pickPage(_ sender: NSButton?) {
+    private func pickPage(_ sender: Any?) {
         pickPage()
     }
 
@@ -143,6 +143,19 @@ extension PDFPagePicker {
 
         // Make sure there's a selection.
         collectionView.selectItems(at: [.init(item: 0, section: 0)], scrollPosition: .centeredHorizontally)
+    }
+}
+
+// MARK: - NSStandardKeyBindingResponding Overrides
+
+extension PDFPagePicker {
+    override public func doCommand(by selector: Selector) {
+        if selector == #selector(insertNewline(_:)) {
+            // If we got sent an enter we'd want to pick the page.
+            pickPage()
+        } else {
+            super.doCommand(by: selector)
+        }
     }
 }
 

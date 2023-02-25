@@ -44,9 +44,9 @@
                         <rect key="frame" x="1" y="1" width="518" height="213"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView selectable="YES" allowsEmptySelection="NO" id="JAM-SW-Y8t">
+                            <collectionView selectable="YES" allowsEmptySelection="NO" id="JAM-SW-Y8t" customClass="PDFDocumentView" customModule="PDFPagePicker">
                                 <rect key="frame" x="0.0" y="0.0" width="518" height="213"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumInteritemSpacing="10" minimumLineSpacing="10" scrollDirection="horizontal" id="r20-Tb-jI7">
                                     <size key="itemSize" width="50" height="50"/>
                                     <edgeInsets key="sectionInset" left="16" right="16" top="0.0" bottom="0.0"/>
