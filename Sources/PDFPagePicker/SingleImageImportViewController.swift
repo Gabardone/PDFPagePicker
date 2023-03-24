@@ -36,26 +36,25 @@ public class SingleImageImportViewController: NSViewController {
     /// Can be set for initialization, can be subscribed to for updates or checked for current value.
     public var image: NSImage? {
         get {
-            return imageWell.image
+            return imageSubject.value
         }
 
         set {
-            guard image != newValue else {
+            guard imageSubject.value != newValue else {
                 return
             }
 
-            imageWell.image = image
+            imageSubject.send(newValue)
 
-            let hasImage = image != nil
-            deleteButton?.isHidden = !hasImage
-            dropImageLabel?.isHidden = hasImage
+            updateUI(image: newValue)
         }
     }
 
     public var imageUpdatePublisher: some Publisher<NSImage?, Never> {
-        // In some cases we may end up publishing twice the same value.
-        return imageWell.publisher(for: \.image)
+        return imageSubject
     }
+
+    private var imageSubject = CurrentValueSubject<NSImage?, Never>(nil)
 
     private var subscriptions = [AnyCancellable]()
 }
@@ -89,6 +88,35 @@ extension SingleImageImportViewController {
                 break
             }
         }
+    }
+}
+
+// MARK: - NSViewController Overrides
+
+extension SingleImageImportViewController {
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+
+        updateUI(image: image)
+
+        imageWell.publisher(for: \.image)
+            .removeDuplicates()
+            .sink { [weak self] image in
+                self?.image = image
+            }
+            .store(in: &subscriptions)
+    }
+}
+
+// MARK: - UI Utilities
+
+extension SingleImageImportViewController {
+    private func updateUI(image: NSImage?) {
+        imageWell?.image = image
+
+        let hasImage = image != nil
+        deleteButton?.isHidden = !hasImage
+        dropImageLabel?.isHidden = hasImage
     }
 }
 
