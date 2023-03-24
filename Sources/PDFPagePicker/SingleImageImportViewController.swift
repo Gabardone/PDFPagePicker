@@ -34,10 +34,13 @@ public class SingleImageImportViewController: NSViewController {
     // MARK: - Stored Properties
 
     /// Can be set for initialization, can be subscribed to for updates or checked for current value.
-    @Published
     public var image: NSImage? {
-        didSet {
-            guard image != oldValue else {
+        get {
+            return imageWell.image
+        }
+
+        set {
+            guard image != newValue else {
                 return
             }
 
@@ -47,6 +50,11 @@ public class SingleImageImportViewController: NSViewController {
             deleteButton?.isHidden = !hasImage
             dropImageLabel?.isHidden = hasImage
         }
+    }
+
+    public var imageUpdatePublisher: some Publisher<NSImage?, Never> {
+        // In some cases we may end up publishing twice the same value.
+        return imageWell.publisher(for: \.image)
     }
 
     private var subscriptions = [AnyCancellable]()
@@ -81,33 +89,6 @@ extension SingleImageImportViewController {
                 break
             }
         }
-    }
-}
-
-// MARK: - UI Management
-
-extension SingleImageImportViewController {
-    private func updateAccessoryControls() {
-
-    }
-}
-
-// MARK: - NSViewController Overrides
-
-extension SingleImageImportViewController {
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Hide the button when there is no image.
-        let imagePublisher = imageWell.publisher(for: \.image)
-
-        // Update the image property when the image well is updated.
-        // Should short-circuit due to equality when the property itself is set.
-        imagePublisher
-            .sink { [weak self] image in
-                self?.image = image
-            }
-            .store(in: &subscriptions)
     }
 }
 
