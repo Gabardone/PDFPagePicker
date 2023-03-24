@@ -27,9 +27,11 @@
                             <rect key="frame" x="0.0" y="40" width="240" height="240"/>
                             <subviews>
                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="nG8-za-Dyc">
-                                    <rect key="frame" x="72" y="112" width="97" height="16"/>
-                                    <textFieldCell key="cell" selectable="YES" title="Drop .pdf File…" id="83Y-1N-Qlf">
+                                    <rect key="frame" x="47" y="104" width="147" height="32"/>
+                                    <textFieldCell key="cell" selectable="YES" alignment="center" id="83Y-1N-Qlf">
                                         <font key="font" metaFont="system"/>
+                                        <string key="title">Drop or paste image or
+image file…</string>
                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -55,6 +57,7 @@
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="ApJ-mp-k94" secondAttribute="trailing" constant="8" id="5od-Fh-Kuv"/>
+                                <constraint firstItem="nG8-za-Dyc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TJZ-ND-YP9" secondAttribute="leading" constant="20" symbolic="YES" id="7X3-Tb-XlW"/>
                                 <constraint firstItem="xQH-Ld-QKZ" firstAttribute="top" secondItem="TJZ-ND-YP9" secondAttribute="top" priority="200" id="9v6-gJ-8VX"/>
                                 <constraint firstItem="xQH-Ld-QKZ" firstAttribute="centerX" secondItem="TJZ-ND-YP9" secondAttribute="centerX" id="A9d-cx-DDU"/>
                                 <constraint firstItem="xQH-Ld-QKZ" firstAttribute="leading" secondItem="TJZ-ND-YP9" secondAttribute="leading" priority="200" id="AY1-Hg-ZGF"/>

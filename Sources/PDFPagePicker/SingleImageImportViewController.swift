@@ -5,16 +5,23 @@
 //  Created by Óscar Morales Vivó on 2/11/23.
 //
 
-import AutoLayoutHelpers
 import Cocoa
 import Combine
 import os
 import PDFKit
-import PDFPagePicker
 import UniformTypeIdentifiers
 
-class SingleImageImportViewController: NSViewController {
-    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "\(SingleImageImportViewController.self)")
+public class SingleImageImportViewController: NSViewController {
+    private static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(SingleImageImportViewController.self)")
+
+    public init() {
+        super.init(nibName: "SingleImageImportViewController", bundle: .module)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("\(type(of: Self.self)) does not support NSCoding")
+    }
 
     // MARK: - IBOutlets
 
@@ -24,7 +31,23 @@ class SingleImageImportViewController: NSViewController {
 
     @IBOutlet private var dropImageLabel: NSTextField!
 
-    // MARK: - Properties
+    // MARK: - Stored Properties
+
+    /// Can be set for initialization, can be subscribed to for updates or checked for current value.
+    @Published
+    public var image: NSImage? {
+        didSet {
+            guard image != oldValue else {
+                return
+            }
+
+            imageWell.image = image
+
+            let hasImage = image != nil
+            deleteButton?.isHidden = !hasImage
+            dropImageLabel?.isHidden = hasImage
+        }
+    }
 
     private var subscriptions = [AnyCancellable]()
 }
@@ -61,20 +84,28 @@ extension SingleImageImportViewController {
     }
 }
 
+// MARK: - UI Management
+
+extension SingleImageImportViewController {
+    private func updateAccessoryControls() {
+
+    }
+}
+
 // MARK: - NSViewController Overrides
 
 extension SingleImageImportViewController {
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         // Hide the button when there is no image.
-        imageWell.publisher(for: \.image)
-            .map { image in
-                image != nil
-            }
-            .sink { [deleteButton, dropImageLabel] hasImage in
-                deleteButton?.isHidden = !hasImage
-                dropImageLabel?.isHidden = hasImage
+        let imagePublisher = imageWell.publisher(for: \.image)
+
+        // Update the image property when the image well is updated.
+        // Should short-circuit due to equality when the property itself is set.
+        imagePublisher
+            .sink { [weak self] image in
+                self?.image = image
             }
             .store(in: &subscriptions)
     }
