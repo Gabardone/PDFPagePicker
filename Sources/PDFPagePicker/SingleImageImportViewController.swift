@@ -5,16 +5,23 @@
 //  Created by Óscar Morales Vivó on 2/11/23.
 //
 
-import AutoLayoutHelpers
 import Cocoa
 import Combine
 import os
 import PDFKit
-import PDFPagePicker
 import UniformTypeIdentifiers
 
-class SingleImageImportViewController: NSViewController {
-    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "\(SingleImageImportViewController.self)")
+public class SingleImageImportViewController: NSViewController {
+    private static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(SingleImageImportViewController.self)")
+
+    public init() {
+        super.init(nibName: "SingleImageImportViewController", bundle: .module)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("\(type(of: Self.self)) does not support NSCoding")
+    }
 
     // MARK: - IBOutlets
 
@@ -24,7 +31,30 @@ class SingleImageImportViewController: NSViewController {
 
     @IBOutlet private var dropImageLabel: NSTextField!
 
-    // MARK: - Properties
+    // MARK: - Stored Properties
+
+    /// Can be set for initialization, can be subscribed to for updates or checked for current value.
+    public var image: NSImage? {
+        get {
+            return imageSubject.value
+        }
+
+        set {
+            guard imageSubject.value != newValue else {
+                return
+            }
+
+            imageSubject.send(newValue)
+
+            updateUI(image: newValue)
+        }
+    }
+
+    public var imageUpdatePublisher: some Publisher<NSImage?, Never> {
+        return imageSubject
+    }
+
+    private var imageSubject = CurrentValueSubject<NSImage?, Never>(nil)
 
     private var subscriptions = [AnyCancellable]()
 }
@@ -64,19 +94,29 @@ extension SingleImageImportViewController {
 // MARK: - NSViewController Overrides
 
 extension SingleImageImportViewController {
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Hide the button when there is no image.
+        updateUI(image: image)
+
         imageWell.publisher(for: \.image)
-            .map { image in
-                image != nil
-            }
-            .sink { [deleteButton, dropImageLabel] hasImage in
-                deleteButton?.isHidden = !hasImage
-                dropImageLabel?.isHidden = hasImage
+            .removeDuplicates()
+            .sink { [weak self] image in
+                self?.image = image
             }
             .store(in: &subscriptions)
+    }
+}
+
+// MARK: - UI Utilities
+
+extension SingleImageImportViewController {
+    private func updateUI(image: NSImage?) {
+        imageWell?.image = image
+
+        let hasImage = image != nil
+        deleteButton?.isHidden = !hasImage
+        dropImageLabel?.isHidden = hasImage
     }
 }
 
