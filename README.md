@@ -17,7 +17,8 @@ PDFPagePicker` in whichever files need it.
 
 ## Usage
 
-The repository contains a sample test app `PDFPagePickerTestApp` which illustrates basic use of the package API.
+The best way to see how it works is to check the Test application at
+https://github.com/Gabardone/PDFPagePickerTestApp.git and examine how it uses the API in this package.
 
 For any of the options, if the default presentation behavior doesn't work for your needs you can always override
 `NSResponder.presentPDFPagePicker` any place down the responder chain where it will catch the call.
