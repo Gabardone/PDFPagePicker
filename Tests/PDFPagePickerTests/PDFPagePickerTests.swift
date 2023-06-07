@@ -1,5 +1,5 @@
-import XCTest
 @testable import PDFPagePicker
+import XCTest
 
 final class PDFPagePickerTests: XCTestCase {
     func testExample() throws {

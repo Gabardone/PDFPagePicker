@@ -6,8 +6,8 @@
 //
 
 import Cocoa
-import PDFKit
 import os
+import PDFKit
 
 public class PDFPagePicker: NSViewController {
     static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
@@ -20,7 +20,7 @@ public class PDFPagePicker: NSViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -69,7 +69,7 @@ extension PDFPagePicker {
 
 extension PDFPagePicker {
     @IBAction
-    private func pickPage(_ sender: Any?) {
+    private func pickPage(_: Any?) {
         pickPage()
     }
 
@@ -82,7 +82,7 @@ extension PDFPagePicker {
         }
 
         guard let selectedPage = pdfDocument.page(at: selectedIndex) else {
-            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(self.pdfDocument).")
+            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(pdfDocument).")
             return
         }
 
@@ -90,7 +90,7 @@ extension PDFPagePicker {
     }
 
     @IBAction
-    private func cancel(_ sender: NSButton?) {
+    private func cancel(_: NSButton?) {
         dismissSelf()
     }
 
@@ -105,20 +105,20 @@ extension PDFPagePicker {
 
 // MARK: - View Model
 
-extension PDFPagePicker {
-    public var pdfDocument: PDFDocument {
+public extension PDFPagePicker {
+    var pdfDocument: PDFDocument {
         super.representedObject as! PDFDocument
     }
 }
 
 // MARK: - NSViewController Overrides
 
-extension PDFPagePicker {
+public extension PDFPagePicker {
     private static let itemHeight = 180.0
 
     private static let estimatedItemSize = CGSize(width: itemHeight / sqrt(2.0), height: itemHeight)
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Finish configuring the collection view.
@@ -132,13 +132,13 @@ extension PDFPagePicker {
         pickPageButton.title = .localizedStringWithFormat(buttonFormat, verb)
     }
 
-    override public func viewWillAppear() {
+    override func viewWillAppear() {
         super.viewWillAppear()
 
         collectionView.reloadData()
     }
 
-    override public func viewDidAppear() {
+    override func viewDidAppear() {
         super.viewDidAppear()
 
         // Make sure there's a selection.
@@ -148,8 +148,8 @@ extension PDFPagePicker {
 
 // MARK: - NSStandardKeyBindingResponding Overrides
 
-extension PDFPagePicker {
-    override public func doCommand(by selector: Selector) {
+public extension PDFPagePicker {
+    override func doCommand(by selector: Selector) {
         if selector == #selector(insertNewline(_:)) {
             // If we got sent an enter we'd want to pick the page.
             pickPage()
@@ -162,8 +162,8 @@ extension PDFPagePicker {
 // MARK: - NSCollectionViewDataSource Adoption
 
 extension PDFPagePicker: NSCollectionViewDataSource {
-    public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pdfDocument.pageCount
+    public func collectionView(_: NSCollectionView, numberOfItemsInSection _: Int) -> Int {
+        pdfDocument.pageCount
     }
 
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
@@ -184,21 +184,21 @@ extension PDFPagePicker: NSCollectionViewDataSource {
 }
 
 extension PDFPagePicker: NSCollectionViewDelegate {
-    public func collectionView(_ collectionView: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
-        return indexPaths
+    public func collectionView(_: NSCollectionView, shouldSelectItemsAt indexPaths: Set<IndexPath>) -> Set<IndexPath> {
+        indexPaths
     }
 }
 
 // MARK: - NSCollectionViewDelegateFlowLayout
 
 extension PDFPagePicker: NSCollectionViewDelegateFlowLayout {
-    static private let sampleSize = CGSize(width: 1000.0, height: itemHeight)
+    private static let sampleSize = CGSize(width: 1000.0, height: itemHeight)
 
-    static private let selectionMargin = 4.0
+    private static let selectionMargin = 4.0
 
     public func collectionView(
-        _ collectionView: NSCollectionView,
-        layout collectionViewLayout: NSCollectionViewLayout,
+        _: NSCollectionView,
+        layout _: NSCollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> NSSize {
         guard let pdfPage = pdfDocument.page(at: indexPath.item) else {

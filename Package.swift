@@ -13,7 +13,7 @@ let package = Package(
         .library(
             name: "PDFPagePicker",
             targets: ["PDFPagePicker"]
-        ),
+        )
     ],
     targets: [
         .target(

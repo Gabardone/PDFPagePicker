@@ -1,6 +1,6 @@
 //
 //  NSResponder+PDFPagePicker.swift
-//  
+//
 //
 //  Created by Óscar Morales Vivó on 2/23/23.
 //
