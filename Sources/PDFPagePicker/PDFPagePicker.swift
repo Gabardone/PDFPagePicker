@@ -82,7 +82,8 @@ extension PDFPagePicker {
         }
 
         guard let selectedPage = pdfDocument.page(at: selectedIndex) else {
-            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(pdfDocument).")
+            let doc = pdfDocument
+            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(doc).")
             return
         }
 
@@ -107,7 +108,11 @@ extension PDFPagePicker {
 
 public extension PDFPagePicker {
     var pdfDocument: PDFDocument {
-        super.representedObject as! PDFDocument
+        guard let pdfDocument = super.representedObject as? PDFDocument else {
+            preconditionFailure("PDFPagePicker.representedObject of unexpected type \(type(of: super.representedObject))")
+        }
+
+        return pdfDocument
     }
 }
 
@@ -125,10 +130,20 @@ public extension PDFPagePicker {
         collectionView.register(PDFPageItem.self, forItemWithIdentifier: PDFPageItem.identifier)
 
         // Configure labels.
-        let labelFormat = NSLocalizedString("LABEL_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "Select the Page to %@:", comment: "Format string for the header label in the page picker")
+        let labelFormat = NSLocalizedString(
+            "LABEL_FORMAT",
+            bundle: .module,
+            value: "Select the Page to %@:",
+            comment: "Format string for the header label in the page picker"
+        )
         headerLabel.stringValue = .localizedStringWithFormat(labelFormat, verb)
 
-        let buttonFormat = NSLocalizedString("BUTTON_FORMAT", tableName: "PDFPagePickerLocalizable", bundle: .module, value: "%@ Selected", comment: "Format string for the default button in the page picker")
+        let buttonFormat = NSLocalizedString(
+            "BUTTON_FORMAT",
+            bundle: .module,
+            value: "%@ Selected",
+            comment: "Format string for the default button in the page picker"
+        )
         pickPageButton.title = .localizedStringWithFormat(buttonFormat, verb)
     }
 
@@ -166,8 +181,14 @@ extension PDFPagePicker: NSCollectionViewDataSource {
         pdfDocument.pageCount
     }
 
-    public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        guard let item = collectionView.makeItem(withIdentifier: PDFPageItem.identifier, for: indexPath) as? PDFPageItem else {
+    public func collectionView(
+        _ collectionView: NSCollectionView,
+        itemForRepresentedObjectAt indexPath: IndexPath
+    ) -> NSCollectionViewItem {
+        guard let item = collectionView.makeItem(
+            withIdentifier: PDFPageItem.identifier,
+            for: indexPath
+        ) as? PDFPageItem else {
             return NSCollectionViewItem()
         }
 

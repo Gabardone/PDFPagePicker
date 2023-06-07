@@ -16,7 +16,12 @@ import UniformTypeIdentifiers
  Otherwise it works exactly as any regular instance of its superclass.
  */
 open class ImageWell: NSImageView {
-    private static let pasteVerb = NSLocalizedString("PASTE_VERB", value: "Paste", comment: "Paste verb for pdf pagepicker display when pasting pdf content")
+    private static let pasteVerb = NSLocalizedString(
+        "PASTE_VERB",
+        bundle: .module,
+        value: "Paste",
+        comment: "Paste verb for pdf pagepicker display when pasting pdf content"
+    )
 
     @objc
     func paste(_ sender: Any?) {
@@ -35,7 +40,12 @@ open class ImageWell: NSImageView {
         }
     }
 
-    private static let dropVerb = NSLocalizedString("DROP_VERB", value: "Drop", comment: "Drop verb for pdf pagepicker display when dropping pdf content")
+    private static let dropVerb = NSLocalizedString(
+        "DROP_VERB",
+        bundle: .module,
+        value: "Drop",
+        comment: "Drop verb for pdf pagepicker display when dropping pdf content"
+    )
 
     override open func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         if overrideImportImageFrom(pasteboard: sender.draggingPasteboard, verb: Self.dropVerb) {

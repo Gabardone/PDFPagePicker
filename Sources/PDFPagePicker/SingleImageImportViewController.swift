@@ -147,7 +147,12 @@ extension SingleImageImportViewController {
         switch imageUTType {
         case .pdf:
             // We may need to run the pdf page picker to extract the image for the page we actually want.
-            pickPDFPage(from: imageFileURL, verb: NSLocalizedString("IMPORT_VERB", value: "Import", comment: "Import verb for pdf page picker display when opening a file")) { [weak self] image in
+            pickPDFPage(from: imageFileURL, verb: NSLocalizedString(
+                "IMPORT_VERB",
+                bundle: .module,
+                value: "Import",
+                comment: "Import verb for pdf page picker display when opening a file"
+            )) { [weak self] image in
                 self?.imageWell.image = image
             }
 
