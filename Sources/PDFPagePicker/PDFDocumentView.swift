@@ -1,14 +1,13 @@
 //
 //  PDFDocumentView.swift
-//  
+//
 //
 //  Created by Óscar Morales Vivó on 2/24/23.
 //
 
 import Cocoa
 
-class PDFDocumentView: NSCollectionView {
-}
+class PDFDocumentView: NSCollectionView {}
 
 // MARK: - NSStandardKeyBindingResponding Overrides
 

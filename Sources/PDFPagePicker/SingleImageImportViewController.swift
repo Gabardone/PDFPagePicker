@@ -19,7 +19,7 @@ public class SingleImageImportViewController: NSViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("\(type(of: Self.self)) does not support NSCoding")
     }
 
@@ -36,7 +36,7 @@ public class SingleImageImportViewController: NSViewController {
     /// Can be set for initialization, can be subscribed to for updates or checked for current value.
     public var image: NSImage? {
         get {
-            return imageSubject.value
+            imageSubject.value
         }
 
         set {
@@ -51,7 +51,7 @@ public class SingleImageImportViewController: NSViewController {
     }
 
     public var imageUpdatePublisher: some Publisher<NSImage?, Never> {
-        return imageSubject
+        imageSubject
     }
 
     private var imageSubject = CurrentValueSubject<NSImage?, Never>(nil)
@@ -63,13 +63,13 @@ public class SingleImageImportViewController: NSViewController {
 
 extension SingleImageImportViewController {
     @IBAction
-    private func deleteImage(_ sender: NSButton) {
+    private func deleteImage(_: NSButton) {
         // Straightforward, so far.
         imageWell.image = nil
     }
 
     @IBAction
-    private func importImage(_ sender: NSButton) {
+    private func importImage(_: NSButton) {
         guard isViewLoaded, let window = view.window else {
             return
         }
@@ -93,8 +93,8 @@ extension SingleImageImportViewController {
 
 // MARK: - NSViewController Overrides
 
-extension SingleImageImportViewController {
-    override public func viewDidLoad() {
+public extension SingleImageImportViewController {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         updateUI(image: image)
@@ -147,7 +147,12 @@ extension SingleImageImportViewController {
         switch imageUTType {
         case .pdf:
             // We may need to run the pdf page picker to extract the image for the page we actually want.
-            pickPDFPage(from: imageFileURL, verb: NSLocalizedString("IMPORT_VERB", value: "Import", comment: "Import verb for pdf page picker display when opening a file")) { [weak self] image in
+            pickPDFPage(from: imageFileURL, verb: NSLocalizedString(
+                "IMPORT_VERB",
+                bundle: .module,
+                value: "Import",
+                comment: "Import verb for pdf page picker display when opening a file"
+            )) { [weak self] image in
                 self?.imageWell.image = image
             }
 

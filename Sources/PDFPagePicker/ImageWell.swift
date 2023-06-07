@@ -1,6 +1,6 @@
 //
 //  ImageWell.swift
-//  
+//
 //
 //  Created by Óscar Morales Vivó on 2/23/23.
 //
@@ -16,7 +16,12 @@ import UniformTypeIdentifiers
  Otherwise it works exactly as any regular instance of its superclass.
  */
 open class ImageWell: NSImageView {
-    private static let pasteVerb = NSLocalizedString("PASTE_VERB", value: "Paste", comment: "Paste verb for pdf pagepicker display when pasting pdf content")
+    private static let pasteVerb = NSLocalizedString(
+        "PASTE_VERB",
+        bundle: .module,
+        value: "Paste",
+        comment: "Paste verb for pdf pagepicker display when pasting pdf content"
+    )
 
     @objc
     func paste(_ sender: Any?) {
@@ -35,7 +40,12 @@ open class ImageWell: NSImageView {
         }
     }
 
-    private static let dropVerb = NSLocalizedString("DROP_VERB", value: "Drop", comment: "Drop verb for pdf pagepicker display when dropping pdf content")
+    private static let dropVerb = NSLocalizedString(
+        "DROP_VERB",
+        bundle: .module,
+        value: "Drop",
+        comment: "Drop verb for pdf pagepicker display when dropping pdf content"
+    )
 
     override open func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         if overrideImportImageFrom(pasteboard: sender.draggingPasteboard, verb: Self.dropVerb) {
@@ -46,7 +56,7 @@ open class ImageWell: NSImageView {
         return super.performDragOperation(sender)
     }
 
-    override open func concludeDragOperation(_ sender: NSDraggingInfo?) {
+    override open func concludeDragOperation(_: NSDraggingInfo?) {
         // This method intentionally left blank. For some reason `NSImageView` sets the image _again_ here, which
         // causes a glitch if we're running the pdf page picker.
     }
@@ -65,8 +75,8 @@ open class ImageWell: NSImageView {
         // If it's a file try to see if we can extract an image from it (right now it'll just paste... the icon?)
         if pasteboard.availableType(from: [.fileURL]) != nil,
            let fileURL = pasteboard.readObjects(
-            forClasses: [NSURL.self],
-            options: [.urlReadingFileURLsOnly: NSNumber(true)]
+               forClasses: [NSURL.self],
+               options: [.urlReadingFileURLsOnly: NSNumber(true)]
            )?.first as? URL,
            let typeID = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
            let utType = UTType(typeID) {

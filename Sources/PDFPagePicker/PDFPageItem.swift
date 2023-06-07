@@ -1,6 +1,6 @@
 //
 //  PDFPageItem.swift
-//  
+//
 //
 //  Created by Óscar Morales Vivó on 2/11/23.
 //
@@ -10,15 +10,15 @@ import PDFKit
 
 class PDFPageItem: NSCollectionViewItem {
     static var identifier: NSUserInterfaceItemIdentifier {
-        return .init(rawValue: "\(Self.self)")
+        .init(rawValue: "\(Self.self)")
     }
 
-    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
+    override init(nibName _: NSNib.Name?, bundle _: Bundle?) {
         super.init(nibName: "PDFPageItem", bundle: .module)
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -71,7 +71,7 @@ extension PDFPageItem {
      - Returns: The desired item size for the above parameters. Will never be smaller than 2x margin no matter the value
      of the `withinSize` parameter.
      */
-    static public func desiredSize(forPage pdfPage: PDFPage, contained withinSize: CGSize, margin: CGFloat) -> CGSize {
+    public static func desiredSize(forPage pdfPage: PDFPage, contained withinSize: CGSize, margin: CGFloat) -> CGSize {
         let margin = max(margin, 0.0)
         let doubleMargin = 2.0 * margin
         guard withinSize.width > doubleMargin, withinSize.height > doubleMargin else {
@@ -108,7 +108,7 @@ extension PDFPageItem {
     /// The default value is 2.0
     public var selectionMargin: CGFloat {
         get {
-            return horizontalMargin.constant * 0.5
+            horizontalMargin.constant * 0.5
         }
 
         set {
@@ -151,7 +151,7 @@ extension PDFPageItem {
 extension PDFPageItem {
     override var representedObject: Any? {
         get {
-            return super.representedObject
+            super.representedObject
         }
 
         set {
@@ -178,7 +178,7 @@ extension PDFPageItem {
 
 extension PDFPageItem {
     @objc
-    private func selectPage(_ sender: Any?) {
+    private func selectPage(_: Any?) {
         guard let pdfPage else {
             return
         }
@@ -197,9 +197,9 @@ extension PDFPageItem {
 
 extension PDFPageItem: NSGestureRecognizerDelegate {
     func gestureRecognizer(
-        _ gestureRecognizer: NSGestureRecognizer,
-        shouldBeRequiredToFailBy otherGestureRecognizer: NSGestureRecognizer
+        _: NSGestureRecognizer,
+        shouldBeRequiredToFailBy _: NSGestureRecognizer
     ) -> Bool {
-        return false
+        false
     }
 }
