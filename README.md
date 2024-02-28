@@ -13,7 +13,7 @@ if needed.
 ## Installation
 
 Select "Add package…" in the Xcode File menu and paste the URL for this same repository in the search bar. Then `import
-PDFPagePicker` in whichever files need it. 
+PDFPagePicker` in whichever files need it.
 
 ## Usage
 

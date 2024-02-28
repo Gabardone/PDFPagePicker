@@ -147,12 +147,7 @@ extension SingleImageImportViewController {
         switch imageUTType {
         case .pdf:
             // We may need to run the pdf page picker to extract the image for the page we actually want.
-            pickPDFPage(from: imageFileURL, verb: NSLocalizedString(
-                "IMPORT_VERB",
-                bundle: .module,
-                value: "Import",
-                comment: "Import verb for pdf page picker display when opening a file"
-            )) { [weak self] image in
+            pickPDFPage(from: imageFileURL, verb: .importVerb) { [weak self] image in
                 self?.imageWell.image = image
             }
 
@@ -170,3 +165,47 @@ extension SingleImageImportViewController {
 // MARK: - NSOpenSavePanelDelegate Adoption
 
 extension SingleImageImportViewController: NSOpenSavePanelDelegate {}
+
+// MARK: - ImageWellImport Adoption
+
+extension SingleImageImportViewController: ImageWellImport {
+    func imageWell(
+        _: ImageWell,
+        willImportImageFrom pasteboard: NSPasteboard,
+        verb: LocalizedStringResource
+    ) -> Bool {
+        // Check if there's direct pdf content.
+        if pasteboard.availableType(from: [.pdf]) != nil,
+           let pdfData = pasteboard.data(forType: .pdf),
+           let pdfDocument = PDFDocument(data: pdfData) {
+            pickPDFPage(from: pdfDocument, verb: verb) { [weak self] image in
+                self?.image = image
+            }
+            return true
+        }
+
+        // If it's a file try to see if we can extract an image from it (right now it'll just paste... the icon?)
+        if pasteboard.availableType(from: [.fileURL]) != nil,
+           let fileURL = pasteboard.readObjects(
+               forClasses: [NSURL.self],
+               options: [.urlReadingFileURLsOnly: NSNumber(true)]
+           )?.first as? URL,
+           let typeID = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
+           let utType = UTType(typeID) {
+            if utType == .pdf {
+                // It's a pdf!. Run the pdf page picker if needed.
+                pickPDFPage(from: fileURL, verb: verb) { [weak self] image in
+                    self?.image = image
+                }
+                return true
+            } else if NSImage.imageTypes.contains(utType.identifier), let image = NSImage(contentsOf: fileURL) {
+                // A supported image file, let's just paste that.
+                // For some reason the system is pasting the icon in the well (OS bug? This used to work...).
+                self.image = image
+                return true
+            }
+        }
+
+        return false
+    }
+}

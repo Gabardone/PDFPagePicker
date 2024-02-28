@@ -26,7 +26,7 @@ extension NSResponder {
      */
     public func pickPDFPage(
         from pdfFileURL: URL,
-        verb: String,
+        verb: LocalizedStringResource,
         completion: @escaping (NSImage) -> Void
     ) {
         // Check first if we can get a pdf document
@@ -54,26 +54,31 @@ extension NSResponder {
      */
     public func pickPDFPage(
         from pdfDocument: PDFDocument,
-        verb: String,
+        verb: LocalizedStringResource,
         completion: @escaping (NSImage) -> Void
     ) {
-        // Check that the pdf actually has pages.
-        guard pdfDocument.pageCount > 0 else {
+        switch pdfDocument.pageCount {
+        case 0:
+            // Unsure how we found an empty pdf but let's walk back into the bushes...
             PDFPagePicker.logger.error("Empty pdf file, no image to import.")
             return
-        }
 
-        // For single page documents we're kinda good already.
-        if pdfDocument.pageCount == 1,
-           let pdfData = pdfDocument.dataRepresentation(),
-           let image = NSImage(data: pdfData) {
+        case 1:
+            // For single page documents we're kinda good already.
+            guard let pdfData = pdfDocument.dataRepresentation(),
+                  let image = NSImage(data: pdfData) else {
+                PDFPagePicker.logger.error("Unable to create image from pdf page.")
+                return
+            }
+
             completion(image)
             return
-        }
 
-        // If we got here we need to present the actual page picker.
-        let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, verb: verb, completion: completion)
-        presentPDFPagePicker(pdfPagePicker)
+        default:
+            // If we got here we need to present the actual page picker.
+            let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, verb: verb, completion: completion)
+            presentPDFPagePicker(pdfPagePicker)
+        }
     }
 
     /**

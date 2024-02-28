@@ -12,7 +12,7 @@ import PDFKit
 public class PDFPagePicker: NSViewController {
     static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
 
-    public init(pdfDocument: PDFDocument, verb: String, completion: @escaping (NSImage) -> Void) {
+    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping (NSImage) -> Void) {
         self.verb = verb
         self.completion = completion
         super.init(nibName: "PDFPagePicker", bundle: .module)
@@ -28,7 +28,7 @@ public class PDFPagePicker: NSViewController {
 
     private let completion: (NSImage) -> Void
 
-    private let verb: String
+    private let verb: LocalizedStringResource
 
     // MARK: - IBOutlets
 
@@ -130,21 +130,8 @@ public extension PDFPagePicker {
         collectionView.register(PDFPageItem.self, forItemWithIdentifier: PDFPageItem.identifier)
 
         // Configure labels.
-        let labelFormat = NSLocalizedString(
-            "LABEL_FORMAT",
-            bundle: .module,
-            value: "Select the Page to %@:",
-            comment: "Format string for the header label in the page picker"
-        )
-        headerLabel.stringValue = .localizedStringWithFormat(labelFormat, verb)
-
-        let buttonFormat = NSLocalizedString(
-            "BUTTON_FORMAT",
-            bundle: .module,
-            value: "%@ Selected",
-            comment: "Format string for the default button in the page picker"
-        )
-        pickPageButton.title = .localizedStringWithFormat(buttonFormat, verb)
+        headerLabel.stringValue = String(localized: .labelFormat(verb: verb))
+        pickPageButton.title = String(localized: .actionButtonFormat(verb: verb))
     }
 
     override func viewWillAppear() {
