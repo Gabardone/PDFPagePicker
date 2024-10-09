@@ -7,6 +7,14 @@
 
 import Cocoa
 
+/**
+ Subclass of `NSCollectionView` so we can override its keyboard management.
+
+ Unfortunately `NSCollectionView` intercepts all keyboard activity if part of the responder chain, which really
+ messes things up when i.e. presented in a dialog with a default button.
+
+ There seems to be no better way to deal with that than subclassing and overriding.
+ */
 class PDFDocumentView: NSCollectionView {}
 
 // MARK: - NSStandardKeyBindingResponding Overrides

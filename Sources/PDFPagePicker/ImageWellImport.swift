@@ -14,6 +14,7 @@ import Cocoa
  won't inherit from that class, but in general it should be adopted by the componetnts down the chain that manage an
  `ImageWell`, usually a `NSViewController` or something with a similar purpose.
  */
+@MainActor
 protocol ImageWellImport {
     /**
      Responder chain delegate for the component responsible to manage the import of images into the image well.
@@ -27,6 +28,7 @@ protocol ImageWellImport {
      - Parameters:
        - imageWell: The image well that wants to import the pasteboard contents.
        - pasteboard: The pasteboard containing the data to import.
+       - verb: The verb that should be displayed for undo menu labeling and other descriptions.
      - Returns: `true` if the calling `ImageWell` should proceed to display the image in the pasteboard, false
      otherwise.
      */

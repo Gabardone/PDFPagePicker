@@ -16,6 +16,7 @@ import UniformTypeIdentifiers
  The class will request presentation of a pdf page picker down the responder chain when given multipage pdf content.
  Otherwise it works exactly as any regular instance of its superclass.
  */
+@MainActor
 open class ImageWell: NSImageView {
     @objc
     func paste(_ sender: Any?) {

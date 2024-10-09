@@ -75,7 +75,7 @@ extension PDFPageItem {
         let margin = max(margin, 0.0)
         let doubleMargin = 2.0 * margin
         guard withinSize.width > doubleMargin, withinSize.height > doubleMargin else {
-            // Degenerate case, image woudlnt' show anyway.
+            // Degenerate case, image wouldnt' show anyway.
             return .init(width: doubleMargin, height: doubleMargin)
         }
 

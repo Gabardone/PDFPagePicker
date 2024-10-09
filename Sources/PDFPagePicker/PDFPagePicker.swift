@@ -12,7 +12,7 @@ import PDFKit
 public class PDFPagePicker: NSViewController {
     static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
 
-    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping (NSImage) -> Void) {
+    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping (ImageImport) -> Void) {
         self.verb = verb
         self.completion = completion
         super.init(nibName: "PDFPagePicker", bundle: .module)
@@ -26,7 +26,7 @@ public class PDFPagePicker: NSViewController {
 
     // MARK: - Properties
 
-    private let completion: (NSImage) -> Void
+    private let completion: (ImageImport) -> Void
 
     private let verb: LocalizedStringResource
 
@@ -61,7 +61,7 @@ extension PDFPagePicker {
             return
         }
 
-        completion(pageImage)
+        completion(.init(source: .data(selectedPageData), image: pageImage, type: .pdf))
     }
 }
 
