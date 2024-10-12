@@ -153,29 +153,31 @@ extension NSResponder {
             try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unsupportedImageType(typeID, imageFileURL))
         }
 
-        // If it's a pdf and we need ot run the picker return.
-        if let imageImport = await withCheckedContinuation({ continuation in
-            if imageUTType == .pdf, pickPDFPage(
-                source: .file(imageFileURL),
-                verb: .importVerb,
-                completion: { imageImport in
-                    continuation.resume(returning: imageImport)
+        switch imageUTType {
+        case .pdf:
+            // If it's a pdf and we need ot run the picker return.
+            return await withCheckedContinuation({ continuation in
+                if pickPDFPage(
+                    source: .file(imageFileURL),
+                    verb: .importVerb,
+                    completion: { imageImport in
+                        continuation.resume(returning: imageImport)
+                    }
+                ) {
+                    return
+                } else {
+                    continuation.resume(returning: nil)
                 }
-            ) {
-                return
-            } else {
-                continuation.resume(returning: nil)
-            }
-        }) {
-            return imageImport
-        }
+            })
 
-        // If we're here we have a supported file with a single image so as long as we can actually build a `NSImage`
-        // off it we can return that.
-        if let image = NSImage(contentsOf: imageFileURL) {
-            return .init(source: .file(imageFileURL), image: image, type: imageUTType)
-        } else {
-            try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unableToCreateImage(typeID, imageFileURL))
+        default:
+            // If we're here we have a supported file with a single image so as long as we can actually build a `NSImage`
+            // off it we can return that.
+            if let image = NSImage(contentsOf: imageFileURL) {
+                return .init(source: .file(imageFileURL), image: image, type: imageUTType)
+            } else {
+                try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unableToCreateImage(typeID, imageFileURL))
+            }
         }
     }
 }

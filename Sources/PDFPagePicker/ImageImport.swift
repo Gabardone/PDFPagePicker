@@ -8,11 +8,9 @@
 import Cocoa
 import UniformTypeIdentifiers
 
-/**
- Encapsulates all the data of an image import, not just the image itself.
-
- The receiver can use the type and source to more optimally store and manage the received image.
- */
+/// Encapsulates all the data of an image import, not just the image itself.
+///
+/// The receiver can use the type and source to more optimally store and manage the received image.
 public struct ImageImport: Sendable {
     public init(source: Source, image: NSImage, type: UTType) {
         self.source = source
@@ -20,22 +18,15 @@ public struct ImageImport: Sendable {
         self.type = type
     }
 
-    /**
-     The actual image as a framework image. Use for immediate display or ignore if the source is what you care for.
+    /// The actual image as a framework image. Use for immediate display or ignore if the source is what you care for.
+    ///
+    /// The image is not meant to be modified. You will break the `Sendable` contract if you do.
+    nonisolated(unsafe) public var image: NSImage
 
-     The image is not meant to be modified. You will break the `Sendable` contract if you do.
-     */
-    nonisolated(unsafe)
-    public var image: NSImage
-
-    /**
-     The source of the image. See the type's documentation for options.
-     */
+    /// The source of the image. See the type's documentation for options.
     public var source: Source
 
-    /**
-     The type of the image.
-     */
+    /// The type of the image.
     public var type: UTType
 }
 

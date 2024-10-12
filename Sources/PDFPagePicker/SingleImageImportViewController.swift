@@ -64,7 +64,7 @@ extension SingleImageImportViewController {
             case .OK:
                 if let imageFileURL = openPanel.urls.first {
                     Task {
-                        try await self.processSelectedImageFile(atURL: imageFileURL)
+                        imageImport = try await self.processSelectedImageFile(atURL: imageFileURL)
                     }
                 }
 
