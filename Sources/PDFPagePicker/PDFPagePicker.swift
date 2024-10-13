@@ -10,9 +10,40 @@ import os
 import PDFKit
 
 public class PDFPagePicker: NSViewController {
+    public enum PickerResult {
+        case success(ImageImport)
+        case cancel
+        case error(Error)
+    }
+
+    enum PickerError: Error, @unchecked Sendable {
+        case unableToExtractPageData(PDFPage)
+        case unableToCreateImageFromPDFPage(PDFPage)
+        case noPageSelection
+        case noPageFoundAtIndex(Int, PDFDocument)
+
+        var localizedDescription: String {
+            switch self {
+            case let .unableToExtractPageData(pdfPage):
+                "Unable to extract page pdf data for pdf page \(pdfPage)."
+
+            case let .unableToCreateImageFromPDFPage(pdfPage):
+                "Unable to create image from pdf page \(pdfPage)."
+
+            case .noPageSelection:
+                "Attempted to pick a page but no page is selected."
+
+            case let .noPageFoundAtIndex(pageIndex, pdfDocument):
+                "Page at index \(pageIndex) not found in pdf document \(pdfDocument)."
+            }
+        }
+    }
+
+    public typealias Completion = (PickerResult) -> Void
+
     static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
 
-    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping (ImageImport) -> Void) {
+    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping Completion) {
         self.verb = verb
         self.completion = completion
         super.init(nibName: "PDFPagePicker", bundle: .module)
@@ -26,7 +57,7 @@ public class PDFPagePicker: NSViewController {
 
     // MARK: - Properties
 
-    private let completion: (ImageImport) -> Void
+    private let completion: Completion
 
     private let verb: LocalizedStringResource
 
@@ -46,22 +77,21 @@ public class PDFPagePicker: NSViewController {
 
 extension PDFPagePicker {
     func pickDoubleClickedPage(_ pdfPage: PDFPage) {
-        dismissSelf()
         pickPDFPage(pdfPage)
     }
 
     private func pickPDFPage(_ pdfPage: PDFPage) {
-        guard let selectedPageData = pdfPage.dataRepresentation else {
-            Self.logger.error("Unable to extract page pdf data for pdf page \(pdfPage).")
-            return
-        }
+        dismissSelf(result: {
+            guard let selectedPageData = pdfPage.dataRepresentation else {
+                return .error(PickerError.unableToExtractPageData(pdfPage))
+            }
 
-        guard let pageImage = NSImage(data: selectedPageData) else {
-            Self.logger.error("Unable to create image from pdf page \(pdfPage).")
-            return
-        }
+            guard let pageImage = NSImage(data: selectedPageData) else {
+                return .error(PickerError.unableToCreateImageFromPDFPage(pdfPage))
+            }
 
-        completion(.init(source: .data(selectedPageData), image: pageImage, type: .pdf))
+            return .success(.init(source: .data(selectedPageData), image: pageImage, type: .pdf))
+        }())
     }
 }
 
@@ -74,16 +104,13 @@ extension PDFPagePicker {
     }
 
     private func pickPage() {
-        dismissSelf()
-
         guard let selectedIndex = collectionView.selectionIndexPaths.first?.item else {
-            Self.logger.error("Attempted to pick a page but no page is selected.")
+            dismissSelf(result: .error(PickerError.noPageSelection))
             return
         }
 
         guard let selectedPage = pdfDocument.page(at: selectedIndex) else {
-            let doc = pdfDocument
-            Self.logger.error("Page at index \(selectedIndex) not found in pdf document \(doc).")
+            dismissSelf(result: .error(PickerError.noPageFoundAtIndex(selectedIndex, pdfDocument)))
             return
         }
 
@@ -92,10 +119,11 @@ extension PDFPagePicker {
 
     @IBAction
     private func cancel(_: NSButton?) {
-        dismissSelf()
+        dismissSelf(result: .cancel)
     }
 
-    private func dismissSelf() {
+    private func dismissSelf(result: PickerResult) {
+        completion(result)
         if let presentingViewController {
             presentingViewController.dismiss(self)
         } else {

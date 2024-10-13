@@ -28,7 +28,7 @@ public enum SingleImageImport {
     }
 }
 
-extension NSResponder {
+public extension NSResponder {
     /**
      Starts a single image import flow.
 
@@ -38,7 +38,7 @@ extension NSResponder {
      `NSImage.imageUnfilteredTypes`
      - Returns An image import `struct` if successful, or `nil` if no import happened due to user cancellation.
      */
-    public func beginSingleImageFileImport(
+    func beginSingleImageFileImport(
         types: Set<UTType>? = nil
     ) async throws -> ImageImport? {
         try await firstResponder(ofType: SingleImageImport.Importer.self)?.runSingleImageFileImportFlow(types: types)
@@ -56,7 +56,7 @@ extension NSWindow: SingleImageImport.Importer {
                 case .OK:
                     if let imageFileURL = openPanel.urls.first {
                         Task {
-                            try await self.processSelectedImageFile(atURL: imageFileURL)
+                            try await self.importImageFrom(fileURL: imageFileURL, verb: .importVerb)
                         }
                     }
 
@@ -79,7 +79,7 @@ extension NSApplication: SingleImageImport.Importer {
             case .OK:
                 if let imageFileURL = openPanel.urls.first {
                     Task {
-                        try await self.processSelectedImageFile(atURL: imageFileURL)
+                        try await self.importImageFrom(fileURL: imageFileURL, verb: .importVerb)
                     }
                 }
 

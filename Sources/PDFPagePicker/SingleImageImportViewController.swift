@@ -64,7 +64,9 @@ extension SingleImageImportViewController {
             case .OK:
                 if let imageFileURL = openPanel.urls.first {
                     Task {
-                        imageImport = try await self.processSelectedImageFile(atURL: imageFileURL)
+                        if let imageImport = try await self.importImageFrom(fileURL: imageFileURL, verb: .importVerb) {
+                            self.imageImport = imageImport
+                        }
                     }
                 }
 
@@ -100,56 +102,20 @@ extension SingleImageImportViewController {
 
 // MARK: - NSOpenSavePanelDelegate Adoption
 
-//extension SingleImageImportViewController: NSOpenSavePanelDelegate {}
+// extension SingleImageImportViewController: NSOpenSavePanelDelegate {}
 
 // MARK: - ImageWellImport Adoption
 
 extension SingleImageImportViewController: ImageWellImport {
     func imageWell(
         _: ImageWell,
-        willImportImageFrom pasteboard: NSPasteboard,
+        importImageFrom pasteboard: NSPasteboard,
         verb: LocalizedStringResource
-    ) -> Bool {
-        // If there's direct pdf content and it has multiple pages we will show the pdf page picker…
-        if pasteboard.availableType(from: [.pdf]) != nil {
-            if let source: ImageImport.Source = {
-                if pasteboard.availableType(from: [.fileURL]) != nil, let fileURL = pasteboard.readObjects(
-                    forClasses: [NSURL.self],
-                    options: [.urlReadingFileURLsOnly: NSNumber(true)]
-                )?.first as? URL {
-                    return .file(fileURL)
-                } else if let data = pasteboard.data(forType: .pdf) {
-                    return .data(data)
-                } else {
-                    return nil
-                }
-            }() {
-                if pickPDFPage(source: source, verb: verb, completion: { [weak self] imageImport in
-                    self?.imageImport = imageImport
-                }) {
-                    return true
-                }
+    ) {
+        Task {
+            if let imageImport = try await importImageFrom(pasteboard: pasteboard, verb: verb) {
+                self.imageImport = imageImport
             }
         }
-
-        // If it's a file try to see if we can extract an image from it (right now it'll just paste... the icon?)
-        if pasteboard.availableType(from: [.fileURL]) != nil,
-           let fileURL = pasteboard.readObjects(
-               forClasses: [NSURL.self],
-               options: [.urlReadingFileURLsOnly: NSNumber(true)]
-           )?.first as? URL,
-           let typeID = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
-           let utType = UTType(typeID) {
-            if NSImage.imageTypes.contains(utType.identifier), let image = NSImage(contentsOf: fileURL) {
-                // A supported image file, let's just paste that.
-                // For some reason the system is pasting the icon in the well (OS bug? This used to work...).
-                self.imageImport = .init(source: .file(fileURL), image: image, type: utType)
-                return true
-            }
-        }
-
-        // TODO: Check for data now. Not just pdf data 🤦🏽‍♂️
-
-        return false
     }
 }

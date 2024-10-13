@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import os
 import PDFKit
 import UniformTypeIdentifiers
 
@@ -47,36 +48,6 @@ extension NSResponder {
      one page it will return that as the image.
 
      Presentation and behavior on finalization are configurable through behavior parameters.
-     - Parameter pdfFileURL: An URL for the pdf we want to extract a page from. If the URL isn't pointing to a valid
-     pdf that the app can access the method will just log and return.
-     - Parameter verb: The action that will be performed with the selected page. Examples include "Import" or "Copy".
-     It will show both in the header label and the selection button.
-     - Parameter present: A block that gets passed the pdf page picker view controller so it can be presented in
-     whatever way makes the more sense fo the context.
-     - Parameter completion: A block called once we have an image for the selected pdf page.
-     - Returns `true` if the picker is being shown, `false` if there is no need to show it.
-     */
-    //    public func pickPDFPage(
-    //        from pdfFileURL: URL,
-    //        verb: LocalizedStringResource,
-    //        completion: @escaping (ImageImport) -> Void
-    //    ) -> Bool {
-    //        // Check first if we can get a pdf document
-    //        guard let pdfDocument = PDFDocument(url: pdfFileURL) else {
-    //            PDFPagePicker.logger.error("File is not a pdf, or has no pages to import.")
-    //            return
-    //        }
-    //
-    //        pickPDFPage(source: .file(pdfFileURL) , pdfDocument: pdfDocument, verb: verb, completion: completion)
-    //    }
-
-    /**
-     Determines whether the page picker needs to be presented and does so if that's the case.
-
-     The method does all necessary validation before presenting the pdf page picker. For example if the pdf only has
-     one page it will return that as the image.
-
-     Presentation and behavior on finalization are configurable through behavior parameters.
      - Parameter source: Where the pdf came from, since we'll want to pass that along.
      - Parameter verb: The action that will be performed with the selected page. Examples include "Import" or "Copy".
      It will show both in the header label and the selection button.
@@ -84,40 +55,42 @@ extension NSResponder {
      data backing it.
      - Returns: `true` if the picker is being shown, `false` if there is no need to show it.
      */
-    public func pickPDFPage(
-        source: ImageImport.Source,
-        verb: LocalizedStringResource,
-        completion: @escaping (ImageImport) -> Void
-    ) -> Bool {
-        let pdfDocument: PDFDocument
-        do {
-            pdfDocument = try source.makePDFDocument()
-        } catch {
-            return false
-        }
+    private func pickPDFPage(source: ImageImport.Source, verb: LocalizedStringResource) async throws -> ImageImport {
+        let pdfDocument = try source.makePDFDocument()
 
         switch pdfDocument.pageCount {
         case 0:
             // Unsure how we found an empty pdf but let's walk back into the bushes...
-            PDFPagePicker.logger.error("Empty pdf file, no image to import.")
-            return false
+            try Logger.pdfPagePicker.logAndThrow(error: ImageImportError.emptyPDF(pdfDocument))
 
         case 1:
             // For single page documents we're kinda good already.
             guard let pdfData = pdfDocument.dataRepresentation(),
                   let image = NSImage(data: pdfData) else {
-                PDFPagePicker.logger.error("Unable to create image from pdf page.")
-                return false
+                try Logger.pdfPagePicker.logAndThrow(
+                    error: ImageImportError.unableToCreateImageFromPage(0, pdfDocument)
+                )
             }
 
-            completion(.init(source: source, image: image, type: .pdf))
-            return false
+            return .init(source: source, image: image, type: .pdf)
 
         default:
             // If we got here we need to present the actual page picker.
-            let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, verb: verb, completion: completion)
-            presentPDFPagePicker(pdfPagePicker)
-            return true
+            return try await withCheckedThrowingContinuation { continuation in
+                let pdfPagePicker = PDFPagePicker(pdfDocument: pdfDocument, verb: verb) { imageImport in
+                    switch imageImport {
+                    case let .success(imageImport):
+                        continuation.resume(returning: imageImport)
+
+                    case .cancel:
+                        continuation.resume(throwing: CancellationError())
+
+                    case let .error(error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+                presentPDFPagePicker(pdfPagePicker)
+            }
         }
     }
 
@@ -131,7 +104,7 @@ extension NSResponder {
      - Parameter pagePicker: The page picker view controller that should be presented for the user to pick a page. It
      is already fully configured.
      */
-    @objc open func presentPDFPagePicker(_ pagePicker: PDFPagePicker) {
+    @objc func presentPDFPagePicker(_ pagePicker: PDFPagePicker) {
         // By default it's down the responder chain.
         if let nextResponder {
             nextResponder.presentPDFPagePicker(pagePicker)
@@ -142,41 +115,62 @@ extension NSResponder {
         }
     }
 
-    func processSelectedImageFile(atURL imageFileURL: URL) async throws -> ImageImport? {
+    func importImageFrom(pasteboard: NSPasteboard, verb: LocalizedStringResource) async throws -> ImageImport? {
+        if pasteboard.availableType(from: [.fileURL]) != nil,
+           let fileURL = pasteboard.readObjects(
+               forClasses: [NSURL.self],
+               options: [.urlReadingFileURLsOnly: NSNumber(true)]
+           )?.first as? URL {
+            // If there's a file URL we redirect there.
+            return try await importImageFrom(fileURL: fileURL, verb: verb)
+        } else if pasteboard.availableType(from: [.pdf]) != nil {
+            // Let's check first if we have pdf data.
+            guard let pdfData = pasteboard.data(forType: .pdf) else {
+                throw ImageImportError.unableToGetPDFDataFromPasteboard(pasteboard)
+            }
+
+            return try await pickPDFPage(source: .data(pdfData), verb: verb)
+        } else {
+            // Try to find the best supported image type.
+            let supportedTypes = NSImage.imageTypes
+            for type in pasteboard.types ?? [] {
+                if supportedTypes.contains(type.rawValue),
+                   let utType = UTType(type.rawValue),
+                   let imageData = pasteboard.data(forType: type),
+                   let image = NSImage(data: imageData) {
+                    return .init(source: .data(imageData), image: image, type: utType)
+                }
+            }
+
+            throw ImageImportError.noSupportedImageTypeFound(pasteboard)
+        }
+    }
+
+    func importImageFrom(fileURL: URL, verb: LocalizedStringResource) async throws -> ImageImport? {
         // Get the file type.
-        guard let typeID = try? imageFileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier else {
-            try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unableToDetermineFileType(imageFileURL))
+        guard let typeID = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier else {
+            try SingleImageImport.logger.logAndThrow(error: ImageImportError.unableToDetermineFileType(fileURL))
         }
 
         // Make sure that the file is of a system-supported image type.
         guard let imageUTType = UTType(typeID), NSImage.imageUnfilteredTypes.contains([imageUTType.identifier]) else {
-            try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unsupportedImageType(typeID, imageFileURL))
+            try SingleImageImport.logger.logAndThrow(error: ImageImportError.unsupportedImageType(typeID, fileURL))
         }
 
         switch imageUTType {
         case .pdf:
             // If it's a pdf and we need ot run the picker return.
-            return await withCheckedContinuation({ continuation in
-                if pickPDFPage(
-                    source: .file(imageFileURL),
-                    verb: .importVerb,
-                    completion: { imageImport in
-                        continuation.resume(returning: imageImport)
-                    }
-                ) {
-                    return
-                } else {
-                    continuation.resume(returning: nil)
-                }
-            })
+            return try await pickPDFPage(source: .file(fileURL), verb: .importVerb)
 
         default:
-            // If we're here we have a supported file with a single image so as long as we can actually build a `NSImage`
-            // off it we can return that.
-            if let image = NSImage(contentsOf: imageFileURL) {
-                return .init(source: .file(imageFileURL), image: image, type: imageUTType)
+            // If we're here we have a supported file with a single image so as long as we can actually build a
+            // `NSImage` off it we can return that.
+            if let image = NSImage(contentsOf: fileURL) {
+                return .init(source: .file(fileURL), image: image, type: imageUTType)
             } else {
-                try SingleImageImport.logger.logAndThrow(error: ProcessFileError.unableToCreateImage(typeID, imageFileURL))
+                try SingleImageImport.logger.logAndThrow(
+                    error: ImageImportError.unableToCreateImage(typeID, fileURL)
+                )
             }
         }
     }
@@ -184,10 +178,16 @@ extension NSResponder {
 
 extension NSResponder {
     /// Errors thrown by `NSResponder.processSelectedImageFile(atURL:)`
-    enum ProcessFileError: Error {
+    enum ImageImportError: Error, @unchecked Sendable {
         case unableToDetermineFileType(URL)
         case unsupportedImageType(String, URL)
         case unableToCreateImage(String, URL)
+
+        case emptyPDF(PDFDocument)
+        case unableToCreateImageFromPage(Int, PDFDocument)
+
+        case unableToGetPDFDataFromPasteboard(NSPasteboard)
+        case noSupportedImageTypeFound(NSPasteboard)
 
         var localizedDescription: String {
             switch self {
@@ -199,6 +199,18 @@ extension NSResponder {
 
             case let .unableToCreateImage(typeID, imageFileURL):
                 "Unable to create image of type \(typeID) from file \(imageFileURL)"
+
+            case let .emptyPDF(pdfDocument):
+                "Impossible to create image from empty pdf document \(pdfDocument)."
+
+            case let .unableToCreateImageFromPage(pageNumber, pdfDocument):
+                "Unable to create image from page \(pageNumber) of pdf document \(pdfDocument)."
+
+            case let .unableToGetPDFDataFromPasteboard(pasteboard):
+                "Unable to get pdf data from pasteboard \(pasteboard)."
+
+            case let .noSupportedImageTypeFound(pasteboard):
+                "No supported image type found in pasteboard \(pasteboard)."
             }
         }
     }

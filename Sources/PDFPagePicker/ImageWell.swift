@@ -7,8 +7,7 @@
 
 import Cocoa
 import Iutilitis
-import PDFKit
-import UniformTypeIdentifiers
+import os
 
 /**
  A lightweight `NSImageView` subclass that will intercept multipage pdf content and show a page picker.
@@ -18,39 +17,28 @@ import UniformTypeIdentifiers
  */
 @MainActor
 open class ImageWell: NSImageView {
-    @objc
-    func paste(_ sender: Any?) {
-        // Either `nil` or `true` mean we have to do our thing.
-        guard firstResponder(ofType: ImageWellImport.self)?.imageWell(
-            self,
-            willImportImageFrom: .general,
-            verb: .pasteVerb
-        ) != false else {
-            // Importer down the chain still needs to do work.
-            return
-        }
+    static let logger = Logger(
+        subsystem: Bundle.module.bundleIdentifier!,
+        category: "\(SingleImageImport.self)"
+    )
 
-        // If the above didn't work out, call super. In a rather convoluted way because it's implemented in the
-        // superclass but not visibly declared where the Swift compiler can see it.
-        let pasteSelector = Selector(#function)
-        if let superImp = class_getMethodImplementation(Self.superclass().self, pasteSelector) {
-            typealias ClosureType = @convention(c) (AnyObject, Selector, Any?) -> Void
-            let superCaller = unsafeBitCast(superImp, to: ClosureType.self)
-            superCaller(self, pasteSelector, sender)
+    @objc
+    func paste(_: Any?) {
+        if let importer = firstResponder(ofType: ImageWellImport.self) {
+            importer.imageWell(self, importImageFrom: .general, verb: .pasteVerb)
+        } else {
+            Self.logger.error("Unable to find an image importer (`SingleImageImport`) in the responder chain")
         }
     }
 
     override open func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        guard firstResponder(ofType: ImageWellImport.self)?.imageWell(
-            self,
-            willImportImageFrom: sender.draggingPasteboard,
-            verb: .dropVerb
-        ) != false else {
-            // The override importer is overriding.
+        if let importer = firstResponder(ofType: ImageWellImport.self) {
+            importer.imageWell(self, importImageFrom: sender.draggingPasteboard, verb: .dropVerb)
             return true
+        } else {
+            Self.logger.error("Unable to find an image importer (`SingleImageImport`) in the responder chain")
+            return false
         }
-
-        return super.performDragOperation(sender)
     }
 
     override open func concludeDragOperation(_: NSDraggingInfo?) {

@@ -21,7 +21,7 @@ public struct ImageImport: Sendable {
     /// The actual image as a framework image. Use for immediate display or ignore if the source is what you care for.
     ///
     /// The image is not meant to be modified. You will break the `Sendable` contract if you do.
-    nonisolated(unsafe) public var image: NSImage
+    public nonisolated(unsafe) var image: NSImage
 
     /// The source of the image. See the type's documentation for options.
     public var source: Source
@@ -30,9 +30,9 @@ public struct ImageImport: Sendable {
     public var type: UTType
 }
 
-extension ImageImport {
+public extension ImageImport {
     /// Describes where the type of sourcing of the image and stores the associated information for the source.
-    public enum Source {
+    enum Source {
         /// The image came from a file. The associated URL should be a `file://` url that points to it.
         case file(URL)
 
