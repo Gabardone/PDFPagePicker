@@ -10,7 +10,7 @@ import os
 import PDFKit
 import UniformTypeIdentifiers
 
-public extension PDFDocument {
+private extension PDFDocument {
     enum InitializationError: Error {
         case dataFailure(Data)
         case fileFailure(URL)
@@ -104,7 +104,7 @@ extension NSResponder {
      - Parameter pagePicker: The page picker view controller that should be presented for the user to pick a page. It
      is already fully configured.
      */
-    @objc func presentPDFPagePicker(_ pagePicker: PDFPagePicker) {
+    @objc open func presentPDFPagePicker(_ pagePicker: PDFPagePicker) {
         // By default it's down the responder chain.
         if let nextResponder {
             nextResponder.presentPDFPagePicker(pagePicker)

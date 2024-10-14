@@ -10,7 +10,7 @@ import os
 import PDFKit
 
 public class PDFPagePicker: NSViewController {
-    public enum PickerResult {
+    enum PickerResult {
         case success(ImageImport)
         case cancel
         case error(Error)
@@ -39,11 +39,11 @@ public class PDFPagePicker: NSViewController {
         }
     }
 
-    public typealias Completion = (PickerResult) -> Void
+    typealias Completion = (PickerResult) -> Void
 
     static let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "\(PDFPagePicker.self)")
 
-    public init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping Completion) {
+    init(pdfDocument: PDFDocument, verb: LocalizedStringResource, completion: @escaping Completion) {
         self.verb = verb
         self.completion = completion
         super.init(nibName: "PDFPagePicker", bundle: .module)
@@ -134,7 +134,7 @@ extension PDFPagePicker {
 
 // MARK: - View Model
 
-public extension PDFPagePicker {
+private extension PDFPagePicker {
     var pdfDocument: PDFDocument {
         guard let pdfDocument = super.representedObject as? PDFDocument else {
             preconditionFailure("PDFPagePicker.representedObject of unexpected type \(type(of: super.representedObject))")

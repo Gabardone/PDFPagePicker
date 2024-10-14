@@ -22,7 +22,7 @@ class PDFPageItem: NSCollectionViewItem {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Public properties
+    // MARK: - Stored Properties
 
     /// Configure this property so thumbnail size calculations track the actual display item size.
     var desiredSize: CGSize = PDFPageItem.defaultThumbnailSize
@@ -42,7 +42,7 @@ class PDFPageItem: NSCollectionViewItem {
 // MARK: - View Model
 
 extension PDFPageItem {
-    public var pdfPage: PDFPage? {
+    var pdfPage: PDFPage? {
         get {
             super.representedObject as? PDFPage
         }
@@ -71,7 +71,7 @@ extension PDFPageItem {
      - Returns: The desired item size for the above parameters. Will never be smaller than 2x margin no matter the value
      of the `withinSize` parameter.
      */
-    public static func desiredSize(forPage pdfPage: PDFPage, contained withinSize: CGSize, margin: CGFloat) -> CGSize {
+    static func desiredSize(forPage pdfPage: PDFPage, contained withinSize: CGSize, margin: CGFloat) -> CGSize {
         let margin = max(margin, 0.0)
         let doubleMargin = 2.0 * margin
         guard withinSize.width > doubleMargin, withinSize.height > doubleMargin else {
@@ -106,7 +106,7 @@ extension PDFPageItem {
     /// Sets the margin around the image, which shows selection highlight
     ///
     /// The default value is 2.0
-    public var selectionMargin: CGFloat {
+    var selectionMargin: CGFloat {
         get {
             horizontalMargin.constant * 0.5
         }
@@ -177,8 +177,8 @@ extension PDFPageItem {
 // MARK: - User Interaction
 
 extension PDFPageItem {
-    @objc
-    private func selectPage(_: Any?) {
+    /// Declared `@objc` because its selector is called by a gesture recognizer.
+    @objc private func selectPage(_: Any?) {
         guard let pdfPage else {
             return
         }

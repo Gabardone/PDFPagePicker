@@ -9,9 +9,25 @@ import Cocoa
 import os
 import UniformTypeIdentifiers
 
+public extension NSResponder {
+    /**
+     Starts a single image import flow.
+
+     The default implementation will dig down the responder chain. Overrides at the window and app levels will present
+     sheets or modal dialogs correspondingly.
+     - Parameter types: The `UTType` types of images that can be imported. If nil, will allow for any type present in
+     `NSImage.imageUnfilteredTypes`
+     - Returns An image import `struct` if successful, or `nil` if no import happened due to user cancellation or other
+     error.
+     */
+    func beginSingleImageFileImport(types: Set<UTType>? = nil) async throws -> ImageImport? {
+        try await firstResponder(ofType: SingleImageImport.Importer.self)?.runSingleImageFileImportFlow(types: types)
+    }
+}
+
 /// Namespace `enum` for single image import functionality that uses the pdf page picker when needed.
-public enum SingleImageImport {
-    public enum Result {
+enum SingleImageImport {
+    enum Result {
         case imported(ImageImport)
         case canceled
         case error(Error)
@@ -25,23 +41,6 @@ public enum SingleImageImport {
     @MainActor
     protocol Importer {
         func runSingleImageFileImportFlow(types: Set<UTType>?) async throws -> ImageImport?
-    }
-}
-
-public extension NSResponder {
-    /**
-     Starts a single image import flow.
-
-     The default implementation will dig down the responder chain. Overrides at the window and app levels will present
-     sheets or modal dialogs correspondingly.
-     - Parameter types: The `UTType` types of images that can be imported. If nil, will allow for any type present in
-     `NSImage.imageUnfilteredTypes`
-     - Returns An image import `struct` if successful, or `nil` if no import happened due to user cancellation.
-     */
-    func beginSingleImageFileImport(
-        types: Set<UTType>? = nil
-    ) async throws -> ImageImport? {
-        try await firstResponder(ofType: SingleImageImport.Importer.self)?.runSingleImageFileImportFlow(types: types)
     }
 }
 
@@ -91,7 +90,7 @@ extension NSApplication: SingleImageImport.Importer {
     }
 }
 
-public extension NSOpenPanel {
+extension NSOpenPanel {
     /**
      Returns an open panel ready to open a single image for import.
 
