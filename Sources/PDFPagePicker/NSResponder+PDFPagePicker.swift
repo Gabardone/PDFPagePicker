@@ -222,5 +222,6 @@ extension NSViewController {
      */
     @objc override open func presentPDFPagePicker(_ pagePicker: PDFPagePicker) {
         presentAsSheet(pagePicker)
+        NSApplication.shared.activate(ignoringOtherApps: true) // In case this happened due to drop.
     }
 }
