@@ -15,20 +15,19 @@ let package = Package(
             targets: ["PDFPagePicker"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/Gabardone/Iutilitis", .upToNextMinor(from: "0.0.1"))
-    ],
     targets: [
         .target(
             name: "PDFPagePicker",
-            dependencies: [
-                "Iutilitis"
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
             name: "PDFPagePickerTests",
-            dependencies: ["PDFPagePicker"]
+            dependencies: ["PDFPagePicker"],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
         )
-    ],
-    swiftLanguageModes: [.v5, .v6]
+    ]
 )
