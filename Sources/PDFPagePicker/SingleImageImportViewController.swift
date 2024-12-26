@@ -31,14 +31,28 @@ public class SingleImageImportViewController: NSViewController {
 
     // MARK: - Stored Properties
 
-    /// Can be set for initialization, can be subscribed to for updates or checked for current value.
-    @Published
+    private var imageImportSubject = CurrentValueSubject<ImageImport?, Never>(nil)
+
+    /// Can be set for initialization.
     public var imageImport: ImageImport? {
-        didSet {
-            guard imageImport != oldValue else { return }
+        get {
+            imageImportSubject.value
+        }
+
+        set {
+            guard imageImportSubject.value != newValue else {
+                return
+            }
+
+            imageImportSubject.send(newValue)
 
             updateUI(image: imageImport?.image)
         }
+    }
+
+    /// Will update subscribers with current value, then any further changes.
+    public var imageImportPublisher: some Publisher<ImageImport?, Never> {
+        imageImportSubject
     }
 }
 

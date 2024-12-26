@@ -61,13 +61,9 @@ extension NSResponder {
      - Returns The closest responder down the chain of the requested type, or `nil` if none were found.
      */
     @MainActor public func firstResponder<T>(ofType _: T.Type) -> T? {
-        for nextResponder in responderChain() {
-            if let typecast = nextResponder as? T {
-                return typecast
-            }
-        }
-
-        return nil
+        responderChain().lazy.compactMap { responder in
+            responder as? T
+        }.first
     }
 }
 
