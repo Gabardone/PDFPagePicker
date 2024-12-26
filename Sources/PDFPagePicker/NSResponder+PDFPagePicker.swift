@@ -173,7 +173,7 @@ extension NSResponder {
         }
     }
 
-    func importImageFrom(fileURL: URL, verb: LocalizedStringResource) async throws -> ImageImport? {
+    func importImageFrom(fileURL: URL, verb _: LocalizedStringResource) async throws -> ImageImport? {
         // Get the file type.
         guard let typeID = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier else {
             try SingleImageImport.logger.logAndThrow(error: ImageImportError.unableToDetermineFileType(fileURL))

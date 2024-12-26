@@ -99,7 +99,7 @@ extension NSOpenPanel {
      - Returns: A configured open panel for single image import.
      */
     static func singleImageImporter(types: Set<UTType>? = nil) -> NSOpenPanel {
-        let types = types?.map { $0 } ?? NSImage.imageUnfilteredTypes.compactMap { typeID in
+        let types = types?.map(\.self) ?? NSImage.imageUnfilteredTypes.compactMap { typeID in
             UTType(typeID)
         }
 
